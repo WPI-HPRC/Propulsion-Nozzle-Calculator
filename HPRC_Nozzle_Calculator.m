@@ -104,8 +104,8 @@ function xDot = chamber_pressure_dynamics(x,L,d_case,M_e,T_0,a,n,k_p,ihib,R,A_st
     P_0 = (N/V)*k_b*T_0;
     r = a*P_0^n;
     
-    d_cDot = 2*r;
-    L_gDot = (2-ihib)*r;
+    d_cDot = -2*r;
+    L_gDot = -(2-ihib)*r;
     NDot = n*change_in_volume(L_g,d_c,r,d_case,ihib)-(N_A/M_e)*mass_flow_rate_out(A_star,P_0,R,T_0,k_p);
 
     xDot = [NDot;d_cDot;L_gDot];

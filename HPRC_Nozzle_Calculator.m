@@ -6,9 +6,9 @@ L = 7; % Length of Grain (in)
 d_core = 0.75; % Diameter of the Core (in)
 d_star = 0.425; % Diameter of Throat (in)
 d_case = 2; % Diameter of Casing (in)
-M_e = 0.2367; % Molar Mass of Exhaust (kgmol^-1)
+M_p = 0.2367; % Molar of Propellent (kgmol^-1)
 T_0 = 2773; % Combustion Temperature (K)
-rho_p = 1668.474187; % Density of Propellent (kg/m^3)
+rho_p = 1668.474187; % Density of Solid Propellent (kg/m^3)
 m_p = 0.557918615; % Mass of Propellent (kg)
 a = 3.51398*10^-5; % Burn Coeffient (ms^-1Pa^1n)
 n = 0.327392; % Burn Exponent
@@ -35,9 +35,9 @@ k_a = 1.4; % Ratio of Specific Heats of Air
 
 %% Derived Parameters
 
-R = R_bar/M_e; % Specific Gas Constant (m^2s^-2K^-1)
+R = R_bar/M_p; % Specific Gas Constant (m^2s^-2K^-1)
 A_star = pi*(d_star/2)^2; % Area of Throat (m^2)
-n_p = rho_p/(M_e*N_A); % Number Density of Propellant (m^-3)
+n_p = rho_p/(M_p*N_A); % Number Density of Solid Propellant (m^-3)
 
 
 %% Chamebr Pressure
@@ -52,10 +52,10 @@ PRec(1) = 101325;
 
 for i=2:length(t)
     dt = 0.00065/(1+exp(-0.0021*(i-2000)));
-    k1=chamber_pressure_dynamics(xCurr,L,d_case,M_e,T_0,a,n,k_p,ihibited_ends,R,A_star,N_A,k_b)*dt;
-    k2=chamber_pressure_dynamics(xCurr+1/2*k1,L,d_case,M_e,T_0,a,n,k_p,ihibited_ends,R,A_star,N_A,k_b)*dt;
-    k3=chamber_pressure_dynamics(xCurr+1/2*k2,L,d_case,M_e,T_0,a,n,k_p,ihibited_ends,R,A_star,N_A,k_b)*dt;
-    k4=chamber_pressure_dynamics(xCurr+k3,L,d_case,M_e,T_0,a,n,k_p,ihibited_ends,R,A_star,N_A,k_b)*dt;
+    k1=chamber_pressure_dynamics(xCurr,L,d_case,M_p,T_0,a,n,k_p,ihibited_ends,R,A_star,N_A,k_b)*dt;
+    k2=chamber_pressure_dynamics(xCurr+1/2*k1,L,d_case,M_p,T_0,a,n,k_p,ihibited_ends,R,A_star,N_A,k_b)*dt;
+    k3=chamber_pressure_dynamics(xCurr+1/2*k2,L,d_case,M_p,T_0,a,n,k_p,ihibited_ends,R,A_star,N_A,k_b)*dt;
+    k4=chamber_pressure_dynamics(xCurr+k3,L,d_case,M_p,T_0,a,n,k_p,ihibited_ends,R,A_star,N_A,k_b)*dt;
     xCurr=xCurr+1/6*k1+1/3*k2+1/3*k3+1/6*k4;
     xRec(:,i)=xCurr;
     t(i)=t(i-1)+dt;
@@ -69,7 +69,7 @@ end
 
 
 figure(1)
-plot(PRec,t)
+plot(t,PRec)
 title("Chamber Pressure over Burn")
 xlabel('time (s)', 'FontSize', 11)
 ylabel('Chamber Pressure (Pa)', 'FontSize', 11)
@@ -102,29 +102,27 @@ function xDot = chamber_pressure_dynamics(x,L,d_case,M_e,T_0,a,n,k_p,ihib,R,A_st
     
     V = (L-L_g)*pi*(d_case/2)^2 + L_g*pi*(d_c/2)^2;
     P_0 = (N/V)*k_b*T_0;
-
     r = a*P_0^n;
-    d_cDot = r;
+    
+    d_cDot = 2*r;
     L_gDot = (2-ihib)*r;
-
     NDot = n*change_in_volume(L_g,d_c,r,d_case,ihib)-(N_A/M_e)*mass_flow_rate_out(A_star,P_0,R,T_0,k_p);
 
     xDot = [NDot;d_cDot;L_gDot];
 end
 
 function mDot = mass_flow_rate_out(A_star,P,R,T_0,k)
-    P_star = P*(((k+1)/2)^(k/(k-1)));
-    T_star = T_0*((k+1)/2);
+    P_star = P*((2/(k+1))^(k/(k-1)));
+    T_star = T_0*(2/(k+1));
 
-    mDot = A_star*P_star*sqrt(k/(R*T_star))*(((k+1)/2)^(-(k+1)/(2*(k-1))));
+    mDot = A_star*P_star*sqrt(k/(R*T_star))*(((k+1)/2)^((k+1)/(2*(1-k))));
 end
 
-function vDot = change_in_volume(L,d_core,r,d_case, ihib)
-    delta_A_core = pi*(((d_core+r)/2)^2-(d_core/2)^2);
+function vDot = change_in_volume(Lg,d_core,r,d_case, ihib)
+    delta_A_core = pi*(((d_core/2)+r)^2-(d_core/2)^2);
     delta_L = (2-ihib)*r;
-    A_end = pi*((d_case/2)^2-(d_core/2)^2);
  
-    vDot = L*delta_A_core + A_end*delta_L;
+    vDot = delta_L*pi*((d_case/2)^2-((d_core/2)+r)^2) + Lg*delta_A_core;
 end
 
 

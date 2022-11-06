@@ -39,11 +39,19 @@ R = R_bar/M_p; % Specific Gas Constant (m^2s^-2K^-1)
 A_star = pi*(d_star/2)^2; % Area of Throat (m^2)
 n_p = (rho_p*N_A)/M_p; % Number Density of Solid Propellant (m^-3)
 
+%% Settings
+
+tMaxSteps = 10000; % Maximum Amount of Steps for Chamber Pressure Calculation
+h = 0.00065; % Chamber Pressure dt Height Parameter
+s = 0.0021; % Chamber Pressure dt Shape Parameter
+b = 2000;  % Chamber Pressure dt Location Parameter
+Accuracy = 0.001; % Accuracy of Exit Pressure Calculator
+First_Guess = 50662; % First Guess of Exit Pressure Calculator (Pa)
 
 %% Chamebr Pressure
 
-t = zeros(1,10000);
-dtRec = zeros(1,10000);
+t = zeros(1,tMaxSteps);
+dtRec = zeros(1,length(t));
 
 N_a = (P_a*(L*pi*(d_core/2)^2))/(k_b*T_0);
 xCurr = [0;N_a;d_core;L]; 
@@ -53,7 +61,7 @@ PRec(1) = 101325;
 i=2;
 run = true;
 while(run)
-    dt = 0.00065/(1+exp(-0.0021*(i-2000)));
+    dt = h/(1+exp(-s*(i-b)));
     dtRec(i) = dt;
 
     k1=chamber_pressure_dynamics(xCurr,L,d_case,M_p,T_0,a,n,k_p,ihibited_ends,R,A_star,N_A,k_b,n_p,k_a)*dt;
@@ -82,8 +90,7 @@ while(run)
     i=i+1;
 end
 
-
-figure(1)
+figure()
 plot(t(1:i-1),PRec(1:i-1))
 title("Chamber Pressure over Burn")
 xlabel('time (s)', 'FontSize', 11)
@@ -95,7 +102,10 @@ P_avg = sum(PRec(1:i-1).*dtRec(1:i-1))/burn_time
 
 %% Expansion Ratio
 
+expan_values = expansion_ratio_calcs(P_avg,P_a,k_p,A_star);
 
+expansion_ratio = expan_values(1)
+d_e = expan_values(2)
 
 %% Exit Pressure
 
@@ -141,11 +151,8 @@ function xDot = chamber_pressure_dynamics(x,L,d_case,M_p,T_0,a,n,k_p,inhib,R,A_s
     xDot = [N_pDot;N_aDot;d_cDot;L_gDot];
 end
 
-function mDot = mass_flow_rate_out(A_star,P,R,T_0,k)
-    P_star = P*((2/(k+1))^(k/(k-1)));
-    T_star = T_0*(2/(k+1));
-
-    mDot = A_star*P_star*sqrt(k/(R*T_star))*(((k+1)/2)^((k+1)/(2*(1-k))));
+function mDot = mass_flow_rate_out(A_star,P_0,R,T_0,k)
+    mDot = A_star*P_0*sqrt(k/(R*T_0))*(((k+1)/2)^((k+1)/(2*(1-k))));
 end
 
 function vDot = change_in_volume(Lg,d_core,r,d_case, inhib)
@@ -155,5 +162,21 @@ function vDot = change_in_volume(Lg,d_core,r,d_case, inhib)
     vDot = delta_L*pi*((d_case/2)^2-((d_core/2)+r)^2) + Lg*delta_A_core;
 end
 
+function expan_values = expansion_ratio_calcs(P_0,P_a,k,A_star)
+    expan = ((((k+1)/2)^(1/(k-1)))*((P_a/P_0)^(1/k))*sqrt(((k+1)/(k-1))*(1-(P_a/P_0)^((k-1)/k))))^-1;
 
+    A_e = expan*A_star;
+    d_e = 2*sqrt(A_e/pi);
+
+    expan_values = [expan;d_e];
+end
+
+function P_e = exit_pressure_solver(A_star,A_e,k,P_0,P_e_p,accuracy)
+    P_e = ((A_star/A_e)^k)*(((k+1)/2)^(k/(1-k)))*(((k-1)/(k+1))^(k/2))*...
+        P_0*(1-((P_e_p/P_0)^((k-1)/k)))^(-k/2);
+
+    if(abs(1-(P_e/P_e_))<accuracy)
+        P_e = exit_pressure_solver(A_star,A_e,k,P_0,P_e,accuracy);
+    end
+end
 

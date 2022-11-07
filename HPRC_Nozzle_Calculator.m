@@ -2,14 +2,14 @@ clear all; close all; clc;
 
 %% Inputs
 
-L = 7; % Length of Grain (in)
+L = 7; % Length of Casing (in)
+L_g = 7; % Length of Grain (in)
 d_core = 0.75; % Diameter of the Core (in)
 d_star = 0.425; % Diameter of Throat (in)
-d_case = 2; % Diameter of Casing (in)
+d_case = 2.12; % Diameter of Casing (in)
 M_p = 0.02367; % Molar of Propellent (kgmol^-1)
 T_0 = 2773; % Combustion Temperature (K)
 rho_p = 1668.474187; % Density of Solid Propellent (kg/m^3)
-m_p = 0.557918615; % Mass of Propellent (kg)
 a = 3.51398*10^-5; % Burn Coeffient (ms^-1Pa^1n)
 n = 0.327392; % Burn Exponent
 k_p = 1.21; % Ratio of Specific Heats of Propellant
@@ -17,7 +17,8 @@ ihibited_ends = 0; % Number of Inhibited Ends
 
 %% Conversions
 
-L = L*0.0254; % Length of Grain (m)
+L = L*0.0254; % Length of Casing (in)
+L_g = L_g*0.0254; % Length of Grain (m)
 d_core = d_core*0.0254; % Diameter of the Core (m)
 d_star = d_star*0.0254; % Diameter of Throat (m)
 d_case = d_case*0.0254; % Diameter of Casing (m)
@@ -38,11 +39,12 @@ k_a = 1.4; % Ratio of Specific Heats of Air
 R = R_bar/M_p; % Specific Gas Constant (m^2s^-2K^-1)
 A_star = pi*(d_star/2)^2; % Area of Throat (m^2)
 n_p = (rho_p*N_A)/M_p; % Number Density of Solid Propellant (m^-3)
+m_p = rho_p*(L_g*pi*((d_case/2)^2)-(d_core/2)^2); % Mass of Propellent (kg)
 
 %% Settings
 
-tMaxSteps = 10000; % Maximum Amount of Steps for Chamber Pressure Calculation
-h = 0.00065; % Chamber Pressure dt Height Parameter
+tMaxSteps = 100000; % Maximum Amount of Steps for Chamber Pressure Calculation
+h = 0.000065; % Chamber Pressure dt Height Parameter
 s = 0.0021; % Chamber Pressure dt Shape Parameter
 b = 2000;  % Chamber Pressure dt Location Parameter
 Accuracy = 0.001; % Accuracy of Exit Pressure Calculator
@@ -53,10 +55,13 @@ First_Guess = 50662; % First Guess of Exit Pressure Calculator (Pa)
 t = zeros(1,tMaxSteps);
 dtRec = zeros(1,length(t));
 
-N_a = (P_a*(L*pi*(d_core/2)^2))/(k_b*T_0);
-xCurr = [0;N_a;d_core;L]; 
+N_a = (P_a*(L_g*pi*(d_core/2)^2))/(k_b*T_0);
+xCurr = [0;N_a;d_core;L_g]; 
 PRec = zeros(1,length(t));
 PRec(1) = 101325;
+mDotRec = zeros(1,length(t));
+kRec = zeros(1,length(t));
+kRec(1) = 1.4;
 
 i=2;
 run = true;
@@ -81,10 +86,13 @@ while(run)
 
     PRec(i) = P_0;
 
+    kRec(i)=(N_a*k_a+N_p*k_p)/(N_a+N_p);
+    mDotRec(i) = mass_flow_rate_out(A_star,P_0,R,T_0,kRec(i));
+
     if(d_c>d_case&&P_0<P_a)
         run = false;
     end
-    if(i==10000)
+    if(i==tMaxSteps)
         run = false;
     end
     i=i+1;
@@ -93,10 +101,11 @@ end
 figure()
 plot(t(1:i-1),PRec(1:i-1))
 title("Chamber Pressure over Burn")
-xlabel('time (s)', 'FontSize', 11)
+xlabel('Time (s)', 'FontSize', 11)
 ylabel('Chamber Pressure (Pa)', 'FontSize', 11)
 
-burn_time = t(i-1)
+iMax = i-2;
+burn_time = t(iMax)
 P_avg = sum(PRec(1:i-1).*dtRec(1:i-1))/burn_time
 
 
@@ -106,22 +115,45 @@ expan_values = expansion_ratio_calcs(P_avg,P_a,k_p,A_star);
 
 expansion_ratio = expan_values(1)
 d_e = expan_values(2)
+A_e = A_star*expansion_ratio;
 
 %% Exit Pressure
 
+P_eRec = zeros(1,length(t));
 
+for u = 1:iMax
+    
+    P_eRec(u) = exit_pressure_solver(A_star,A_e,kRec(u),PRec(u),First_Guess,Accuracy);
+
+end
+
+P_e_avg = sum(P_eRec(1:i-1).*dtRec(1:i-1))/burn_time
 
 %% Thrust
 
+FRec = zeros(1,length(t));
 
+for u = 1:iMax
+
+    FRec(u) = thrust(mDotRec(u),P_eRec(u),P_a,A_e,kRec(u),R,T_0,PRec(u));
+
+end
+
+F_avg = sum(FRec(1:i-1).*dtRec(1:i-1))/burn_time
+
+figure()
+plot(t(1:i-1),FRec(1:i-1))
+title("Thrust over Burn")
+xlabel('Time (s)', 'FontSize', 11)
+ylabel('Thrust (N)', 'FontSize', 11)
 
 %% Total Impulse
 
-
+I_t = F_avg*burn_time
 
 %% Specific Impulse
 
-
+Isp = I_t/(m_p*g)
 
 %% Functions
 
@@ -175,8 +207,13 @@ function P_e = exit_pressure_solver(A_star,A_e,k,P_0,P_e_p,accuracy)
     P_e = ((A_star/A_e)^k)*(((k+1)/2)^(k/(1-k)))*(((k-1)/(k+1))^(k/2))*...
         P_0*(1-((P_e_p/P_0)^((k-1)/k)))^(-k/2);
 
-    if(abs(1-(P_e/P_e_))<accuracy)
+    if(abs(1-(P_e/P_e_p))>accuracy)
         P_e = exit_pressure_solver(A_star,A_e,k,P_0,P_e,accuracy);
     end
+end
+
+function F = thrust(mDot,P_e,P_a,A_e,k,R,T_0,P_0)
+    v_e = sqrt(((2*k)/(k-1))*R*T_0*(1-(P_0/P_a)^((1-k)/k)));
+    F = mDot*v_e + A_e*(P_e-P_a);
 end
 

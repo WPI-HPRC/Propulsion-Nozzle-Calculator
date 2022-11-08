@@ -77,12 +77,12 @@ k_a = 1.4; % Ratio of Specific Heats of Air
 R = R_bar/M_p; % Specific Gas Constant (m^2s^-2K^-1)
 A_star = pi*(d_star/2)^2; % Area of Throat (m^2)
 n_p = (rho_p*N_A)/M_p; % Number Density of Solid Propellant (m^-3)
-m_p = rho_p*(L_g*pi*((d_case/2)^2)-(d_core/2)^2); % Mass of Propellent (kg)
+m_p = rho_p*(L_g*pi*((d_case/2)^2-(d_core/2)^2)); % Mass of Propellent (kg)
 
 %% Settings
 
-tMaxSteps = 10000; % Maximum Amount of Steps for Chamber Pressure Calculation
-h = 0.00065; % Chamber Pressure dt Height Parameter
+tMaxSteps = 100000; % Maximum Amount of Steps for Chamber Pressure Calculation
+h = 0.000065; % Chamber Pressure dt Height Parameter
 s = 0.0021; % Chamber Pressure dt Shape Parameter
 b = 2000;  % Chamber Pressure dt Location Parameter
 Accuracy = 0.0001; % Accuracy of Exit Pressure Calculator
@@ -94,7 +94,7 @@ t = zeros(1,tMaxSteps);
 dtRec = zeros(1,length(t));
 
 V = (L-L_g)*pi*(d_case/2)^2 + L_g*pi*(d_core/2)^2 + (1/3)*pi*((d_case/2)^2+(d_case/2)*(d_star/2)+(d_star/2)^2)*(tan(theta_c)*((d_case-d_star)/2));
-N_a = (P_a*(V))/(k_b*T_0);
+N_a = (P_a*V)/(k_b*T_0);
 xCurr = [0;N_a;d_core;L_g]; 
 PRec = zeros(1,length(t));
 PRec(1) = 101325;

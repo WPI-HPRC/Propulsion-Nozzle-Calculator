@@ -16,24 +16,24 @@ clear all; close all; clc;
 
 % Expansion Ratio
 %   Flow is isentropic
-%   
+%   Ideal gas
+%   All air has cleared out of the chamber by the average pressure
 
 % Exit Pressure
 %   Flow is isentropic
+%   Ideal gas
 %   Exhaust is choked in the throat
-%   
 
 % Thrust
 %   Flow is isentropic
 %   Calorically Perfect Gas
 %   Alluminum particles are the only non-gas in the exhaust
-%   
 
 % Total Impulse
-%   
+%   None
 
 % Specific Impulse
-%   
+%   None
 
 %% Inputs
 
@@ -96,7 +96,7 @@ First_Guess = 50662; % First Guess of Exit Pressure Calculator (Pa)
 t = zeros(1,tMaxSteps);
 dtRec = zeros(1,length(t));
 
-V = (L-L_g)*pi*(d_case/2)^2 + L_g*pi*(d_core/2)^2 + (1/3)*pi*((d_case/2)^2+(d_case/2)*(d_star/2)+(d_star/2)^2)*(tan(theta_c)*((d_case-d_star)/2));
+V = (L-L_g)*pi*(d_case/2)^2 + L_g*pi*(d_core/2)^2;
 N_a = (P_a*V)/(k_b*T_0);
 xCurr = [0;N_a;d_core;L_g]; 
 PRec = zeros(1,length(t));
@@ -121,7 +121,7 @@ while(run)
 
     N_p = xCurr(1); N_a = xCurr(2); d_c = xCurr(3); L_g = xCurr(4);
 
-    V = (L-L_g)*pi*(d_case/2)^2 + L_g*pi*(d_c/2)^2 + (1/3)*pi*((d_case/2)^2+(d_case/2)*(d_star/2)+(d_star/2)^2)*(tan(theta_c)*((d_case-d_star)/2));
+    V = (L-L_g)*pi*(d_case/2)^2 + L_g*pi*(d_c/2)^2;
 
     P_0_a = (N_a/V)*k_b*T_0;
     P_0_p = (N_p/V)*k_b*T_0;
@@ -151,15 +151,12 @@ ylabel('Chamber Pressure (Pa)', 'FontSize', 11)
 
 iMax = i-1;
 burn_time = t(iMax)
-P_avg = sum(PRec(1:i-1).*dtRec(1:i-1))/burn_time
-
+P_avg = sum(PRec(1:iMax).*dtRec(1:iMax))/burn_time
 
 %% Expansion Ratio
 
-expan_values = expansion_ratio_calcs(P_avg,P_a,k_p,A_star);
+[expansion_ratio,d_e] = expansion_ratio_calcs(P_avg,P_a,two_phase_flow(R,k_p,beta,c_s),A_star)
 
-expansion_ratio = expan_values(1)
-d_e = expan_values(2)
 A_e = A_star*expansion_ratio;
 
 %% Exit Pressure
@@ -172,7 +169,7 @@ for u = 1:iMax
 
 end
 
-P_e_avg = sum(P_eRec(1:i-1).*dtRec(1:i-1))/burn_time
+P_e_avg = sum(P_eRec(1:iMax).*dtRec(1:iMax))/burn_time
 
 % figure()
 % plot(t(1:i-1),P_eRec(1:i-1))
@@ -190,7 +187,7 @@ for u = 1:iMax
 
 end
 
-F_avg = sum(FRec(1:i-1).*dtRec(1:i-1))/burn_time
+F_avg = sum(FRec(1:iMax).*dtRec(1:iMax))/burn_time
 
 subplot(2,1,2)
 plot(t(1:i-1),FRec(1:i-1))
@@ -212,10 +209,9 @@ function xDot = chamber_pressure_dynamics(x,L,d_case,M_p,T_0,a,n,k_p,inhib,R,A_s
     N_p = x(1); N_a = x(2); d_c = x(3); L_g = x(4);
 
     k = ((N_p*k_p+N_a*k_a)/(N_p+N_a));
-
     k = two_phase_flow(R,k,beta,c_s);
     
-    V = (L-L_g)*pi*(d_case/2)^2 + L_g*pi*(d_c/2)^2 + (1/3)*pi*((d_case/2)^2+(d_case/2)*(d_star/2)+(d_star/2)^2)*(tan(theta_c)*((d_case-d_star)/2));
+    V = (L-L_g)*pi*(d_case/2)^2 + L_g*pi*(d_c/2)^2;
     P_0 = (N_a/V)*k_b*T_0+(N_p/V)*k_b*T_0;
     r = a*P_0^n;
 
@@ -237,7 +233,7 @@ function xDot = chamber_pressure_dynamics(x,L,d_case,M_p,T_0,a,n,k_p,inhib,R,A_s
 end
 
 function mDot = mass_flow_rate_out(A_star,P_0,R,T_0,k)
-    mDot = A_star*P_0*sqrt(k/(R*T_0))*(((k+1)/2)^((k+1)/(2*(1-k))));
+    mDot = ((A_star*P_0*k)/sqrt(R*T_0))*sqrt((2/(k+1))^((k+1)/(k-1)));
 end
 
 function vDot = change_in_volume(L_g,d_core,r,d_case, inhib)
@@ -248,13 +244,11 @@ function vDot = change_in_volume(L_g,d_core,r,d_case, inhib)
     vDot = LDot*A_end + L_g*A_coreDot;
 end
 
-function expan_values = expansion_ratio_calcs(P_0,P_a,k,A_star)
+function [expan,d_e] = expansion_ratio_calcs(P_0,P_a,k,A_star)
     expan = ((((k+1)/2)^(1/(k-1)))*((P_a/P_0)^(1/k))*sqrt(((k+1)/(k-1))*(1-(P_a/P_0)^((k-1)/k))))^-1;
 
     A_e = expan*A_star;
     d_e = 2*sqrt(A_e/pi);
-
-    expan_values = [expan;d_e];
 end
 
 function P_e = exit_pressure_solver(A_star,A_e,k,P_0,P_e_p,accuracy)
@@ -267,7 +261,7 @@ function P_e = exit_pressure_solver(A_star,A_e,k,P_0,P_e_p,accuracy)
 end
 
 function F = thrust(mDot,P_e,P_a,A_e,k,R,T_0,P_0)
-    v_e = sqrt(((2*k)/(k-1))*R*T_0*(1-(P_e/P_0)^((k-1)/k)));
+    v_e = sqrt(((2*k)/(k-1))*R*T_0*((1-(P_e/P_0)^((k-1)/k))));
     F = mDot*v_e + A_e*(P_e-P_a);
     if(F<0)
         F = 0;

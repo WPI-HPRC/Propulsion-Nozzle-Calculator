@@ -26,7 +26,7 @@ clear all; close all; clc;
 % Thrust
 %   Flow is isentropic
 %   Calorically Perfect Gas
-%   
+%   Alluminum particles are the only non-gas in the exhaust
 
 % Total Impulse
 %   
@@ -50,6 +50,8 @@ k_p = 1.21; % Ratio of Specific Heats of Propellant
 theta_c = 34.5; % Nozzle Converge Angles (degrees)
 theta_d = 17.5; % Nozzle Diverge Angles (degrees)
 ihibited_ends = 0; % Number of Inhibited Ends
+c_s = 897; % Specific heat of solid particles in exhaust (m^2s^-2K^-1 | Jkg^-1K^-1)
+beta = 0.075; % Mass fraction of solid particlesin exhaust
 
 %% Conversions
 
@@ -64,7 +66,7 @@ theta_d = theta_d*(pi/180); % Nozzle Diverge Angles (radians)
 %% Constants
 
 n_a = 2.7E25; % Number Density of Air (m^-3)
-R_bar = 8.3145; % Universal Gas Constant (kgm^-1s^-2K^-1mol^-1)
+R_bar = 8.3145; % Universal Gas Constant (kgm^-1s^-2K^-1mol^-1 | Jmol^-1K^-1)
 N_A = 6.02E23; % Avagadro's Number (mol^-1)
 k_b = 1.38E-23; % Boltzman Constant (JK^-1)
 P_a = 101325; % Atmospheric Pressure (Pa)
@@ -74,7 +76,7 @@ k_a = 1.4; % Ratio of Specific Heats of Air
 
 %% Derived Parameters
 
-R = R_bar/M_p; % Specific Gas Constant (m^2s^-2K^-1)
+R = R_bar/M_p; % Specific Gas Constant (m^2s^-2K^-1 | Jkg^-1K^-1)
 A_star = pi*(d_star/2)^2; % Area of Throat (m^2)
 n_p = (rho_p*N_A)/M_p; % Number Density of Solid Propellant (m^-3)
 m_p = rho_p*(L_g*pi*((d_case/2)^2)-(d_core/2)^2); % Mass of Propellent (kg)
@@ -181,7 +183,7 @@ FRec = zeros(1,length(t));
 
 for u = 1:iMax
 
-    FRec(u) = thrust(mDotRec(u),P_eRec(u),P_a,A_e,kRec(u),R,T_0,PRec(u));
+    FRec(u) = thrust(mDotRec(u),P_eRec(u),P_a,A_e,kRec(u),R,T_0,PRec(u),beta,c_s);
 
 end
 
@@ -259,8 +261,22 @@ function P_e = exit_pressure_solver(A_star,A_e,k,P_0,P_e_p,accuracy)
     end
 end
 
-function F = thrust(mDot,P_e,P_a,A_e,k,R,T_0,P_0)
+function F = thrust(mDot,P_e,P_a,A_e,k,R,T_0,P_0,beta,c_s)
+    values = two_phase_flow(R,k,beta,c_s);
+    k = values(1);
+    R = values(2);
+
     v_e = sqrt(((2*k)/(k-1))*R*T_0*(1-(P_e/P_0)^((k-1)/k)));
     F = mDot*v_e + A_e*(P_e-P_a);
 end
+
+function values = two_phase_flow(R,k,beta,c_s)
+    c_p = (k*R)/(k-1);
+    c_v = c_p/k;
+    
+    k = (((1-beta)*c_p+beta*c_s)/((1-beta)*c_v+beta*c_s));
+    R = (1-beta)*R;
+    values = [k;R];
+end
+
 

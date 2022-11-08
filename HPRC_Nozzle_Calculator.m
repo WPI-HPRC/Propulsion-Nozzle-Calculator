@@ -106,8 +106,7 @@ kRec = zeros(1,length(t));
 kRec(1) = 1.4;
 
 i=2;
-run = true;
-while(run)
+while(true)
     dt = h/(1+exp(-s*(i-b)));
     dtRec(i-1) = dt;
     
@@ -137,6 +136,7 @@ while(run)
         break;
     end
     if(i==tMaxSteps)
+        fprintf("ERROR: Reached Max Time Steps")
         break;
     end
     i=i+1;
@@ -183,7 +183,8 @@ FRec = zeros(1,length(t));
 
 for u = 1:iMax
 
-    FRec(u) = thrust(mDotRec(u),P_eRec(u),P_a,A_e,kRec(u),R,T_0,PRec(u));
+    correction = ((1/2)*(1+cos(theta_d)))*0.99*0.995*0.96*0.995;
+    FRec(u) = thrust(mDotRec(u),P_eRec(u),P_a,A_e,kRec(u),R,T_0,PRec(u),correction);
 
 end
 
@@ -260,8 +261,9 @@ function P_e = exit_pressure_solver(A_star,A_e,k,P_0,P_e_p,accuracy)
     end
 end
 
-function F = thrust(mDot,P_e,P_a,A_e,k,R,T_0,P_0)
+function F = thrust(mDot,P_e,P_a,A_e,k,R,T_0,P_0,correction)
     v_e = sqrt(((2*k)/(k-1))*R*T_0*((1-(P_e/P_0)^((k-1)/k))));
+    v_e = correction*v_e;
     F = mDot*v_e + A_e*(P_e-P_a);
     if(F<0)
         F = 0;

@@ -1,18 +1,54 @@
 clear all; close all; clc;
 
+%% Assumptions
+
+% Chamber Pressure
+%   The Chamber and Nozzle only have gaseous propellant exhaust and air in them
+%   The gasses in the chamber perfectly mix instantaneously
+%   The entire burn area instantly starts combusting at the start of the burn
+%   The chamber is always at the combustion temperture
+%   Constant ratio of specific heats for each species
+%   All propellent instantly becomes gaseous when its burned
+%   Flow is isentropic
+%   Ideal gas
+%   Exhaust is choked in the throat
+%   The ends maintain a square corner
+%   Burn rate is the same everywhere
+
+% Expansion Ratio
+%   
+
+% Exit Pressure
+%   Flow is isentropic
+%   Exhaust is choked in the throat
+%   
+
+% Thrust
+%   Flow is isentropic
+%   Calorically Perfect Gas
+%   
+
+% Total Impulse
+%   
+
+% Specific Impulse
+%   
+
 %% Inputs
 
 L = 7; % Length of Casing (in)
 L_g = 7; % Length of Grain (in)
 d_core = 0.75; % Diameter of the Core (in)
 d_star = 0.425; % Diameter of Throat (in)
-d_case = 2.12; % Diameter of Casing (in)
+d_case = 2; % Diameter of Casing (in)
 M_p = 0.02367; % Molar of Propellent (kgmol^-1)
 T_0 = 2773; % Combustion Temperature (K)
 rho_p = 1668.474187; % Density of Solid Propellent (kg/m^3)
 a = 3.51398*10^-5; % Burn Coeffient (ms^-1Pa^1n)
 n = 0.327392; % Burn Exponent
 k_p = 1.21; % Ratio of Specific Heats of Propellant
+theta_c = 34.5; % Nozzle Converge Angles (degrees)
+theta_d = 17.5; % Nozzle Diverge Angles (degrees)
 ihibited_ends = 0; % Number of Inhibited Ends
 
 %% Conversions
@@ -22,6 +58,8 @@ L_g = L_g*0.0254; % Length of Grain (m)
 d_core = d_core*0.0254; % Diameter of the Core (m)
 d_star = d_star*0.0254; % Diameter of Throat (m)
 d_case = d_case*0.0254; % Diameter of Casing (m)
+theta_c = theta_c*(pi/180); % Nozzle Converge Angles (radians)
+theta_d = theta_d*(pi/180); % Nozzle Diverge Angles (radians)
 
 %% Constants
 
@@ -43,11 +81,11 @@ m_p = rho_p*(L_g*pi*((d_case/2)^2)-(d_core/2)^2); % Mass of Propellent (kg)
 
 %% Settings
 
-tMaxSteps = 100000; % Maximum Amount of Steps for Chamber Pressure Calculation
-h = 0.000065; % Chamber Pressure dt Height Parameter
+tMaxSteps = 10000; % Maximum Amount of Steps for Chamber Pressure Calculation
+h = 0.00065; % Chamber Pressure dt Height Parameter
 s = 0.0021; % Chamber Pressure dt Shape Parameter
 b = 2000;  % Chamber Pressure dt Location Parameter
-Accuracy = 0.001; % Accuracy of Exit Pressure Calculator
+Accuracy = 0.0001; % Accuracy of Exit Pressure Calculator
 First_Guess = 50662; % First Guess of Exit Pressure Calculator (Pa)
 
 %% Chamebr Pressure
@@ -55,7 +93,8 @@ First_Guess = 50662; % First Guess of Exit Pressure Calculator (Pa)
 t = zeros(1,tMaxSteps);
 dtRec = zeros(1,length(t));
 
-N_a = (P_a*(L_g*pi*(d_core/2)^2))/(k_b*T_0);
+V = (L-L_g)*pi*(d_case/2)^2 + L_g*pi*(d_core/2)^2 + (1/3)*pi*((d_case/2)^2+(d_case/2)*(d_star/2)+(d_star/2)^2)*(tan(theta_c)*((d_case-d_star)/2));
+N_a = (P_a*(V))/(k_b*T_0);
 xCurr = [0;N_a;d_core;L_g]; 
 PRec = zeros(1,length(t));
 PRec(1) = 101325;
@@ -67,19 +106,20 @@ i=2;
 run = true;
 while(run)
     dt = h/(1+exp(-s*(i-b)));
-    dtRec(i) = dt;
-
-    k1=chamber_pressure_dynamics(xCurr,L,d_case,M_p,T_0,a,n,k_p,ihibited_ends,R,A_star,N_A,k_b,n_p,k_a)*dt;
-    k2=chamber_pressure_dynamics(xCurr+1/2*k1,L,d_case,M_p,T_0,a,n,k_p,ihibited_ends,R,A_star,N_A,k_b,n_p,k_a)*dt;
-    k3=chamber_pressure_dynamics(xCurr+1/2*k2,L,d_case,M_p,T_0,a,n,k_p,ihibited_ends,R,A_star,N_A,k_b,n_p,k_a)*dt;
-    k4=chamber_pressure_dynamics(xCurr+k3,L,d_case,M_p,T_0,a,n,k_p,ihibited_ends,R,A_star,N_A,k_b,n_p,k_a)*dt;
+    dtRec(i-1) = dt;
+    
+    k1=chamber_pressure_dynamics(xCurr,L,d_case,M_p,T_0,a,n,k_p,ihibited_ends,R,A_star,N_A,k_b,n_p,k_a,M_a,d_star,theta_c)*dt;
+    k2=chamber_pressure_dynamics(xCurr+1/2*k1,L,d_case,M_p,T_0,a,n,k_p,ihibited_ends,R,A_star,N_A,k_b,n_p,k_a,M_a,d_star,theta_c)*dt;
+    k3=chamber_pressure_dynamics(xCurr+1/2*k2,L,d_case,M_p,T_0,a,n,k_p,ihibited_ends,R,A_star,N_A,k_b,n_p,k_a,M_a,d_star,theta_c)*dt;
+    k4=chamber_pressure_dynamics(xCurr+k3,L,d_case,M_p,T_0,a,n,k_p,ihibited_ends,R,A_star,N_A,k_b,n_p,k_a,M_a,d_star,theta_c)*dt;
     xCurr=xCurr+1/6*k1+1/3*k2+1/3*k3+1/6*k4;
     
     t(i)=t(i-1)+dt;
 
     N_p = xCurr(1); N_a = xCurr(2); d_c = xCurr(3); L_g = xCurr(4);
-    V = (L-L_g)*pi*(d_case/2)^2 + L_g*pi*(d_c/2)^2;
-    
+
+    V = (L-L_g)*pi*(d_case/2)^2 + L_g*pi*(d_c/2)^2 + (1/3)*pi*((d_case/2)^2+(d_case/2)*(d_star/2)+(d_star/2)^2)*(tan(theta_c)*((d_case-d_star)/2));
+
     P_0_a = (N_a/V)*k_b*T_0;
     P_0_p = (N_p/V)*k_b*T_0;
     P_0 = P_0_a + P_0_p;
@@ -90,10 +130,10 @@ while(run)
     mDotRec(i) = mass_flow_rate_out(A_star,P_0,R,T_0,kRec(i));
 
     if(d_c>d_case&&P_0<P_a)
-        run = false;
+        break;
     end
     if(i==tMaxSteps)
-        run = false;
+        break;
     end
     i=i+1;
 end
@@ -104,7 +144,7 @@ title("Chamber Pressure over Burn")
 xlabel('Time (s)', 'FontSize', 11)
 ylabel('Chamber Pressure (Pa)', 'FontSize', 11)
 
-iMax = i-2;
+iMax = i-1;
 burn_time = t(iMax)
 P_avg = sum(PRec(1:i-1).*dtRec(1:i-1))/burn_time
 
@@ -128,6 +168,12 @@ for u = 1:iMax
 end
 
 P_e_avg = sum(P_eRec(1:i-1).*dtRec(1:i-1))/burn_time
+
+figure()
+plot(t(1:i-1),P_eRec(1:i-1))
+title("Exit Pressure over Burn")
+xlabel('Time (s)', 'FontSize', 11)
+ylabel('Exit Pressure (Pa)', 'FontSize', 11)
 
 %% Thrust
 
@@ -157,12 +203,12 @@ Isp = I_t/(m_p*g)
 
 %% Functions
 
-function xDot = chamber_pressure_dynamics(x,L,d_case,M_p,T_0,a,n,k_p,inhib,R,A_star,N_A,k_b,n_p,k_a)
+function xDot = chamber_pressure_dynamics(x,L,d_case,M_p,T_0,a,n,k_p,inhib,R,A_star,N_A,k_b,n_p,k_a,M_a,d_star,theta_c)
     N_p = x(1); N_a = x(2); d_c = x(3); L_g = x(4);
 
     k = ((N_p*k_p+N_a*k_a)/(N_p+N_a));
     
-    V = (L-L_g)*pi*(d_case/2)^2 + L_g*pi*(d_c/2)^2;
+    V = (L-L_g)*pi*(d_case/2)^2 + L_g*pi*(d_c/2)^2 + (1/3)*pi*((d_case/2)^2+(d_case/2)*(d_star/2)+(d_star/2)^2)*(tan(theta_c)*((d_case-d_star)/2));
     P_0 = (N_a/V)*k_b*T_0+(N_p/V)*k_b*T_0;
     r = a*P_0^n;
 
@@ -176,7 +222,7 @@ function xDot = chamber_pressure_dynamics(x,L,d_case,M_p,T_0,a,n,k_p,inhib,R,A_s
         N_pDot = -(N_A/M_p)*m_pDot;
     end
 
-    N_aDot = -(N_A/M_p)*m_aDot;
+    N_aDot = -(N_A/M_a)*m_aDot;
     d_cDot = 2*r;
     L_gDot = (inhib-2)*r;    
 
@@ -187,11 +233,12 @@ function mDot = mass_flow_rate_out(A_star,P_0,R,T_0,k)
     mDot = A_star*P_0*sqrt(k/(R*T_0))*(((k+1)/2)^((k+1)/(2*(1-k))));
 end
 
-function vDot = change_in_volume(Lg,d_core,r,d_case, inhib)
-    delta_A_core = pi*(((d_core/2)+r)^2-(d_core/2)^2);
-    delta_L = (2-inhib)*r;
+function vDot = change_in_volume(L_g,d_core,r,d_case, inhib)
+    A_coreDot = pi*(((d_core/2)+r)^2-(d_core/2)^2);
+    LDot = (2-inhib)*r;
+    A_end = pi*((d_case/2)^2-((d_core/2)+r)^2);
  
-    vDot = delta_L*pi*((d_case/2)^2-((d_core/2)+r)^2) + Lg*delta_A_core;
+    vDot = LDot*A_end + L_g*A_coreDot;
 end
 
 function expan_values = expansion_ratio_calcs(P_0,P_a,k,A_star)
@@ -213,7 +260,7 @@ function P_e = exit_pressure_solver(A_star,A_e,k,P_0,P_e_p,accuracy)
 end
 
 function F = thrust(mDot,P_e,P_a,A_e,k,R,T_0,P_0)
-    v_e = sqrt(((2*k)/(k-1))*R*T_0*(1-(P_0/P_a)^((1-k)/k)));
+    v_e = sqrt(((2*k)/(k-1))*R*T_0*(1-(P_e/P_0)^((k-1)/k)));
     F = mDot*v_e + A_e*(P_e-P_a);
 end
 

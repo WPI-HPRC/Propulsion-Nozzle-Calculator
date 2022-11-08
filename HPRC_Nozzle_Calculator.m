@@ -3,7 +3,6 @@ clear all; close all; clc;
 %% Assumptions
 
 % Chamber Pressure
-%   The Chamber and Nozzle only have gaseous propellant exhaust and air in them
 %   The gasses in the chamber perfectly mix instantaneously
 %   The entire burn area instantly starts combusting at the start of the burn
 %   The chamber is always at the combustion temperture
@@ -16,6 +15,7 @@ clear all; close all; clc;
 %   Burn rate is the same everywhere
 
 % Expansion Ratio
+%   Flow is isentropic
 %   
 
 % Exit Pressure
@@ -27,6 +27,7 @@ clear all; close all; clc;
 %   Flow is isentropic
 %   Calorically Perfect Gas
 %   Alluminum particles are the only non-gas in the exhaust
+%   
 
 % Total Impulse
 %   
@@ -76,7 +77,7 @@ k_a = 1.4; % Ratio of Specific Heats of Air
 
 %% Derived Parameters
 
-R = R_bar/M_p; % Specific Gas Constant (m^2s^-2K^-1 | Jkg^-1K^-1)
+R = (1-beta)*(R_bar/M_p); % Specific Gas Constant (m^2s^-2K^-1 | Jkg^-1K^-1)
 A_star = pi*(d_star/2)^2; % Area of Throat (m^2)
 n_p = (rho_p*N_A)/M_p; % Number Density of Solid Propellant (m^-3)
 m_p = rho_p*(L_g*pi*((d_case/2)^2-(d_core/2)^2)); % Mass of Propellent (kg)
@@ -110,10 +111,10 @@ while(run)
     dt = h/(1+exp(-s*(i-b)));
     dtRec(i-1) = dt;
     
-    k1=chamber_pressure_dynamics(xCurr,L,d_case,M_p,T_0,a,n,k_p,ihibited_ends,R,A_star,N_A,k_b,n_p,k_a,M_a,d_star,theta_c)*dt;
-    k2=chamber_pressure_dynamics(xCurr+1/2*k1,L,d_case,M_p,T_0,a,n,k_p,ihibited_ends,R,A_star,N_A,k_b,n_p,k_a,M_a,d_star,theta_c)*dt;
-    k3=chamber_pressure_dynamics(xCurr+1/2*k2,L,d_case,M_p,T_0,a,n,k_p,ihibited_ends,R,A_star,N_A,k_b,n_p,k_a,M_a,d_star,theta_c)*dt;
-    k4=chamber_pressure_dynamics(xCurr+k3,L,d_case,M_p,T_0,a,n,k_p,ihibited_ends,R,A_star,N_A,k_b,n_p,k_a,M_a,d_star,theta_c)*dt;
+    k1=chamber_pressure_dynamics(xCurr,L,d_case,M_p,T_0,a,n,k_p,ihibited_ends,R,A_star,N_A,k_b,n_p,k_a,M_a,d_star,theta_c,beta,c_s)*dt;
+    k2=chamber_pressure_dynamics(xCurr+1/2*k1,L,d_case,M_p,T_0,a,n,k_p,ihibited_ends,R,A_star,N_A,k_b,n_p,k_a,M_a,d_star,theta_c,beta,c_s)*dt;
+    k3=chamber_pressure_dynamics(xCurr+1/2*k2,L,d_case,M_p,T_0,a,n,k_p,ihibited_ends,R,A_star,N_A,k_b,n_p,k_a,M_a,d_star,theta_c,beta,c_s)*dt;
+    k4=chamber_pressure_dynamics(xCurr+k3,L,d_case,M_p,T_0,a,n,k_p,ihibited_ends,R,A_star,N_A,k_b,n_p,k_a,M_a,d_star,theta_c,beta,c_s)*dt;
     xCurr=xCurr+1/6*k1+1/3*k2+1/3*k3+1/6*k4;
     
     t(i)=t(i-1)+dt;
@@ -128,7 +129,8 @@ while(run)
 
     PRec(i) = P_0;
 
-    kRec(i)=(N_a*k_a+N_p*k_p)/(N_a+N_p);
+    k = (N_a*k_a+N_p*k_p)/(N_a+N_p);
+    kRec(i)= two_phase_flow(R,k,beta,c_s);
     mDotRec(i) = mass_flow_rate_out(A_star,P_0,R,T_0,kRec(i));
 
     if(d_c>d_case&&P_0<P_a)
@@ -141,6 +143,7 @@ while(run)
 end
 
 figure()
+subplot(2,1,1)
 plot(t(1:i-1),PRec(1:i-1))
 title("Chamber Pressure over Burn")
 xlabel('Time (s)', 'FontSize', 11)
@@ -171,11 +174,11 @@ end
 
 P_e_avg = sum(P_eRec(1:i-1).*dtRec(1:i-1))/burn_time
 
-figure()
-plot(t(1:i-1),P_eRec(1:i-1))
-title("Exit Pressure over Burn")
-xlabel('Time (s)', 'FontSize', 11)
-ylabel('Exit Pressure (Pa)', 'FontSize', 11)
+% figure()
+% plot(t(1:i-1),P_eRec(1:i-1))
+% title("Exit Pressure over Burn")
+% xlabel('Time (s)', 'FontSize', 11)
+% ylabel('Exit Pressure (Pa)', 'FontSize', 11)
 
 %% Thrust
 
@@ -183,13 +186,13 @@ FRec = zeros(1,length(t));
 
 for u = 1:iMax
 
-    FRec(u) = thrust(mDotRec(u),P_eRec(u),P_a,A_e,kRec(u),R,T_0,PRec(u),beta,c_s);
+    FRec(u) = thrust(mDotRec(u),P_eRec(u),P_a,A_e,kRec(u),R,T_0,PRec(u));
 
 end
 
 F_avg = sum(FRec(1:i-1).*dtRec(1:i-1))/burn_time
 
-figure()
+subplot(2,1,2)
 plot(t(1:i-1),FRec(1:i-1))
 title("Thrust over Burn")
 xlabel('Time (s)', 'FontSize', 11)
@@ -205,10 +208,12 @@ Isp = I_t/(m_p*g)
 
 %% Functions
 
-function xDot = chamber_pressure_dynamics(x,L,d_case,M_p,T_0,a,n,k_p,inhib,R,A_star,N_A,k_b,n_p,k_a,M_a,d_star,theta_c)
+function xDot = chamber_pressure_dynamics(x,L,d_case,M_p,T_0,a,n,k_p,inhib,R,A_star,N_A,k_b,n_p,k_a,M_a,d_star,theta_c,beta,c_s)
     N_p = x(1); N_a = x(2); d_c = x(3); L_g = x(4);
 
     k = ((N_p*k_p+N_a*k_a)/(N_p+N_a));
+
+    k = two_phase_flow(R,k,beta,c_s);
     
     V = (L-L_g)*pi*(d_case/2)^2 + L_g*pi*(d_c/2)^2 + (1/3)*pi*((d_case/2)^2+(d_case/2)*(d_star/2)+(d_star/2)^2)*(tan(theta_c)*((d_case-d_star)/2));
     P_0 = (N_a/V)*k_b*T_0+(N_p/V)*k_b*T_0;
@@ -261,22 +266,19 @@ function P_e = exit_pressure_solver(A_star,A_e,k,P_0,P_e_p,accuracy)
     end
 end
 
-function F = thrust(mDot,P_e,P_a,A_e,k,R,T_0,P_0,beta,c_s)
-    values = two_phase_flow(R,k,beta,c_s);
-    k = values(1);
-    R = values(2);
-
+function F = thrust(mDot,P_e,P_a,A_e,k,R,T_0,P_0)
     v_e = sqrt(((2*k)/(k-1))*R*T_0*(1-(P_e/P_0)^((k-1)/k)));
     F = mDot*v_e + A_e*(P_e-P_a);
+    if(F<0)
+        F = 0;
+    end
 end
 
-function values = two_phase_flow(R,k,beta,c_s)
+function k = two_phase_flow(R,k,beta,c_s)
     c_p = (k*R)/(k-1);
     c_v = c_p/k;
     
     k = (((1-beta)*c_p+beta*c_s)/((1-beta)*c_v+beta*c_s));
-    R = (1-beta)*R;
-    values = [k;R];
 end
 
 

@@ -88,8 +88,9 @@ tMaxSteps = 100000; % Maximum Amount of Steps for Chamber Pressure Calculation
 h = 0.000065; % Chamber Pressure dt Height Parameter
 s = 0.0021; % Chamber Pressure dt Shape Parameter
 b = 2000;  % Chamber Pressure dt Location Parameter
-Accuracy = 0.0001; % Accuracy of Exit Pressure Calculator
-First_Guess = 50662; % First Guess of Exit Pressure Calculator (Pa)
+accuracy = 0.0001; % Accuracy of Exit Pressure Calculator
+first_guess = 50662; % First Guess of Exit Pressure Calculator (Pa)
+effiency = 0.9; % Thrust Effiency
 
 %% Chamebr Pressure
 
@@ -144,20 +145,30 @@ end
 
 figure()
 subplot(2,1,1)
-plot(t(1:i-1),PRec(1:i-1))
+plot(t(1:i-1),PRec(1:i-1)./6894.76)
 title("Chamber Pressure over Burn")
 xlabel('Time (s)', 'FontSize', 11)
-ylabel('Chamber Pressure (Pa)', 'FontSize', 11)
+ylabel('Chamber Pressure (psi)', 'FontSize', 11)
 
 iMax = i-1;
-burn_time = t(iMax)
-P_avg = sum(PRec(1:iMax).*dtRec(1:iMax))/burn_time
+burn_time = t(iMax);
+P_avg = sum(PRec(1:iMax).*dtRec(1:iMax))/burn_time;
+P_max = max(PRec);
+
+fprintf("Average Pressure: %5.2fpsi\n",P_avg/6894.76);
+fprintf("Max Pressure: %5.2fpsi\n\n",P_max/6894.76);
+fprintf("Burn Time: %3.2fs\n\n",burn_time);
+
 
 %% Expansion Ratio
 
-[expansion_ratio,d_e] = expansion_ratio_calcs(P_avg,P_a,two_phase_flow(R,k_p,beta,c_s),A_star)
+[expansion_ratio,d_e] = expansion_ratio_calcs(P_avg,P_a,two_phase_flow(R,k_p,beta,c_s),A_star);
 
 A_e = A_star*expansion_ratio;
+
+fprintf("Expansion Ratio: %4.3f\n",expansion_ratio);
+fprintf("Exit Diameter: %5.5fin\n",d_e/0.0254);
+fprintf("Exit Area: %5.5fin^2\n\n",A_e/(0.0254*0.0254));
 
 %% Exit Pressure
 
@@ -165,11 +176,11 @@ P_eRec = zeros(1,length(t));
 
 for u = 1:iMax
     
-    P_eRec(u) = exit_pressure_solver(A_star,A_e,kRec(u),PRec(u),First_Guess,Accuracy);
+    P_eRec(u) = exit_pressure_solver(A_star,A_e,kRec(u),PRec(u),first_guess,accuracy);
 
 end
 
-P_e_avg = sum(P_eRec(1:iMax).*dtRec(1:iMax))/burn_time
+P_e_avg = sum(P_eRec(1:iMax).*dtRec(1:iMax))/burn_time;
 
 % figure()
 % plot(t(1:i-1),P_eRec(1:i-1))
@@ -184,11 +195,9 @@ FRec = zeros(1,length(t));
 for u = 1:iMax
 
     correction = ((1/2)*(1+cos(theta_d)))*0.99*0.995*0.96*0.995;
-    FRec(u) = thrust(mDotRec(u),P_eRec(u),P_a,A_e,kRec(u),R,T_0,PRec(u),beta,c_s,correction);
-
+    F = thrust(mDotRec(u),P_eRec(u),P_a,A_e,kRec(u),R,T_0,PRec(u),beta,c_s,correction);
+    FRec(u) = effiency*F;
 end
-
-F_avg = sum(FRec(1:iMax).*dtRec(1:iMax))/burn_time
 
 subplot(2,1,2)
 plot(t(1:i-1),FRec(1:i-1))
@@ -196,13 +205,21 @@ title("Thrust over Burn")
 xlabel('Time (s)', 'FontSize', 11)
 ylabel('Thrust (N)', 'FontSize', 11)
 
+F_avg = sum(FRec(1:iMax).*dtRec(1:iMax))/burn_time;
+F_max = max(FRec);
+
+fprintf("Average Thrust: %5.2fN\n",F_avg);
+fprintf("Max Thrust: %5.2fN\n\n",F_max);
+
 %% Total Impulse
 
-I_t = F_avg*burn_time
+I_t = F_avg*burn_time;
+fprintf("Total Impulse: %5.2fNs\n",I_t);
 
 %% Specific Impulse
 
-Isp = I_t/(m_p*g)
+Isp = I_t/(m_p*g);
+fprintf("Specific Impulse: %5.2fs\n",Isp);
 
 %% Functions
 

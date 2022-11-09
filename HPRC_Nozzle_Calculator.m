@@ -77,7 +77,7 @@ k_a = 1.4; % Ratio of Specific Heats of Air
 
 %% Derived Parameters
 
-R = (1-beta)*(R_bar/M_p); % Specific Gas Constant (m^2s^-2K^-1 | Jkg^-1K^-1)
+R = (R_bar/M_p); % Specific Gas Constant (m^2s^-2K^-1 | Jkg^-1K^-1)
 A_star = pi*(d_star/2)^2; % Area of Throat (m^2)
 n_p = (rho_p*N_A)/M_p; % Number Density of Solid Propellant (m^-3)
 m_p = rho_p*(L_g*pi*((d_case/2)^2-(d_core/2)^2)); % Mass of Propellent (kg)
@@ -129,7 +129,7 @@ while(true)
     PRec(i) = P_0;
 
     k = (N_a*k_a+N_p*k_p)/(N_a+N_p);
-    kRec(i)= two_phase_flow(R,k,beta,c_s);
+    [kRec(i), ~]= two_phase_flow(R,k,beta,c_s);
     mDotRec(i) = mass_flow_rate_out(A_star,P_0,R,T_0,kRec(i));
 
     if(d_c>d_case&&P_0<P_a)
@@ -184,7 +184,7 @@ FRec = zeros(1,length(t));
 for u = 1:iMax
 
     correction = ((1/2)*(1+cos(theta_d)))*0.99*0.995*0.96*0.995;
-    FRec(u) = thrust(mDotRec(u),P_eRec(u),P_a,A_e,kRec(u),R,T_0,PRec(u),correction);
+    FRec(u) = thrust(mDotRec(u),P_eRec(u),P_a,A_e,kRec(u),R,T_0,PRec(u),beta,c_s,correction);
 
 end
 
@@ -210,8 +210,6 @@ function xDot = chamber_pressure_dynamics(x,L,d_case,M_p,T_0,a,n,k_p,inhib,R,A_s
     N_p = x(1); N_a = x(2); d_c = x(3); L_g = x(4);
 
     k = ((N_p*k_p+N_a*k_a)/(N_p+N_a));
-    k = two_phase_flow(R,k,beta,c_s);
-    
     V = (L-L_g)*pi*(d_case/2)^2 + L_g*pi*(d_c/2)^2;
     P_0 = (N_a/V)*k_b*T_0+(N_p/V)*k_b*T_0;
     r = a*P_0^n;
@@ -261,7 +259,8 @@ function P_e = exit_pressure_solver(A_star,A_e,k,P_0,P_e_p,accuracy)
     end
 end
 
-function F = thrust(mDot,P_e,P_a,A_e,k,R,T_0,P_0,correction)
+function F = thrust(mDot,P_e,P_a,A_e,k,R,T_0,P_0,beta,c_s,correction)
+    [~, R] = two_phase_flow(R,k,beta,c_s);
     v_e = sqrt(((2*k)/(k-1))*R*T_0*((1-(P_e/P_0)^((k-1)/k))));
     v_e = correction*v_e;
     F = mDot*v_e + A_e*(P_e-P_a);
@@ -270,11 +269,12 @@ function F = thrust(mDot,P_e,P_a,A_e,k,R,T_0,P_0,correction)
     end
 end
 
-function k = two_phase_flow(R,k,beta,c_s)
+function [k,R] = two_phase_flow(R,k,beta,c_s)
     c_p = (k*R)/(k-1);
     c_v = c_p/k;
     
     k = (((1-beta)*c_p+beta*c_s)/((1-beta)*c_v+beta*c_s));
+    R = (1-beta)*R;
 end
 
 

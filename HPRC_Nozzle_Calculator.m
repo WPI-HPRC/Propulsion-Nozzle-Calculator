@@ -1,4 +1,4 @@
-clear all; close all; clc;
+clear; close all; clc;
 
 %% Assumptions
 
@@ -42,7 +42,7 @@ L_g = 7; % Length of Grain (in)
 d_core = 0.75; % Diameter of the Core (in)
 d_star = 0.425; % Diameter of Throat (in)
 d_case = 2; % Diameter of Casing (in)
-M_p = 0.02367; % Molar of Propellent (kgmol^-1)
+M_p = 0.02367; % Molar Mass of Propellent (kgmol^-1)
 T_0 = 2773; % Combustion Temperature (K)
 rho_p = 1668.474187; % Density of Solid Propellent (kg/m^3)
 a = 3.51398*10^-5; % Burn Coeffient (ms^-1Pa^1n)
@@ -56,7 +56,7 @@ beta = 0.075; % Mass fraction of solid particlesin exhaust
 
 %% Conversions
 
-L = L*0.0254; % Length of Casing (in)
+L = L*0.0254; % Length of Casing (m)
 L_g = L_g*0.0254; % Length of Grain (m)
 d_core = d_core*0.0254; % Diameter of the Core (m)
 d_star = d_star*0.0254; % Diameter of Throat (m)
@@ -111,10 +111,10 @@ while(true)
     dt = h/(1+exp(-s*(i-b)));
     dtRec(i-1) = dt;
     
-    k1=chamber_pressure_dynamics(xCurr,L,d_case,M_p,T_0,a,n,k_p,ihibited_ends,R,A_star,N_A,k_b,n_p,k_a,M_a,d_star,theta_c,beta,c_s)*dt;
-    k2=chamber_pressure_dynamics(xCurr+1/2*k1,L,d_case,M_p,T_0,a,n,k_p,ihibited_ends,R,A_star,N_A,k_b,n_p,k_a,M_a,d_star,theta_c,beta,c_s)*dt;
-    k3=chamber_pressure_dynamics(xCurr+1/2*k2,L,d_case,M_p,T_0,a,n,k_p,ihibited_ends,R,A_star,N_A,k_b,n_p,k_a,M_a,d_star,theta_c,beta,c_s)*dt;
-    k4=chamber_pressure_dynamics(xCurr+k3,L,d_case,M_p,T_0,a,n,k_p,ihibited_ends,R,A_star,N_A,k_b,n_p,k_a,M_a,d_star,theta_c,beta,c_s)*dt;
+    k1=chamber_pressure_dynamics(xCurr,L,d_case,M_p,T_0,a,n,k_p,ihibited_ends,R,A_star,N_A,k_b,n_p,k_a,M_a)*dt;
+    k2=chamber_pressure_dynamics(xCurr+1/2*k1,L,d_case,M_p,T_0,a,n,k_p,ihibited_ends,R,A_star,N_A,k_b,n_p,k_a,M_a)*dt;
+    k3=chamber_pressure_dynamics(xCurr+1/2*k2,L,d_case,M_p,T_0,a,n,k_p,ihibited_ends,R,A_star,N_A,k_b,n_p,k_a,M_a)*dt;
+    k4=chamber_pressure_dynamics(xCurr+k3,L,d_case,M_p,T_0,a,n,k_p,ihibited_ends,R,A_star,N_A,k_b,n_p,k_a,M_a)*dt;
     xCurr=xCurr+1/6*k1+1/3*k2+1/3*k3+1/6*k4;
     
     t(i)=t(i-1)+dt;
@@ -183,10 +183,10 @@ end
 P_e_avg = sum(P_eRec(1:iMax).*dtRec(1:iMax))/burn_time;
 
 % figure()
-% plot(t(1:i-1),P_eRec(1:i-1))
+% plot(t(1:i-1),P_eRec(1:i-1)./6894.76)
 % title("Exit Pressure over Burn")
 % xlabel('Time (s)', 'FontSize', 11)
-% ylabel('Exit Pressure (Pa)', 'FontSize', 11)
+% ylabel('Exit Pressure (psi)', 'FontSize', 11)
 
 %% Thrust
 
@@ -223,7 +223,7 @@ fprintf("Specific Impulse: %5.2fs\n",Isp);
 
 %% Functions
 
-function xDot = chamber_pressure_dynamics(x,L,d_case,M_p,T_0,a,n,k_p,inhib,R,A_star,N_A,k_b,n_p,k_a,M_a,d_star,theta_c,beta,c_s)
+function xDot = chamber_pressure_dynamics(x,L,d_case,M_p,T_0,a,n,k_p,inhib,R,A_star,N_A,k_b,n_p,k_a,M_a)
     N_p = x(1); N_a = x(2); d_c = x(3); L_g = x(4);
 
     k = ((N_p*k_p+N_a*k_a)/(N_p+N_a));

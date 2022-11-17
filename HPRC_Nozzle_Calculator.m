@@ -367,4 +367,5 @@ end
 %   Exhaust is choked in the throat
 %   The entire thickness of the throat is the same temperature
 %   The chamber is always at the combustion temperture
+%   No heat is lost to the air on the outside of the nozzle
 

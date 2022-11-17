@@ -1,40 +1,5 @@
 clear; close all; clc;
 
-%% Assumptions
-
-% Chamber Pressure
-%   The gasses in the chamber perfectly mix instantaneously
-%   The entire burn area instantly starts combusting at the start of the burn
-%   The chamber is always at the combustion temperture
-%   Constant ratio of specific heats for each species
-%   All propellent instantly becomes gaseous when its burned
-%   Flow is isentropic
-%   Ideal gas
-%   Exhaust is choked in the throat
-%   The ends maintain a square corner
-%   Burn rate is the same everywhere
-
-% Expansion Ratio
-%   Flow is isentropic
-%   Ideal gas
-%   All air has cleared out of the chamber by the average pressure
-
-% Exit Pressure
-%   Flow is isentropic
-%   Ideal gas
-%   Exhaust is choked in the throat
-
-% Thrust
-%   Flow is isentropic
-%   Calorically Perfect Gas
-%   Alluminum particles are the only non-gas in the exhaust
-
-% Total Impulse
-%   None
-
-% Specific Impulse
-%   None
-
 %% Inputs
 
 L = 7; % Length of Casing (in)
@@ -54,6 +19,15 @@ ihibited_ends = 0; % Number of Inhibited Ends
 c_s = 897; % Specific heat of solid particles in exhaust (m^2s^-2K^-1 | Jkg^-1K^-1)
 beta = 0.075; % Mass fraction of solid particlesin exhaust
 
+%% Nozzle Temperature Inputs
+
+thermal = true; % Only turn on if the nozzle is no being cooled
+T_a = 275; % Ambient temperatre (K)
+K_n = 15; % Thermal conductivity of nozzle material (Wm^-1K^-1)
+C_n = 500; % Specific heat of nozzle material (m^2s^-2K^-1 | Jkg^-1K^-1)
+rho_n = 7500;  % Density of nozzle material (kgm^-3)
+t_n = 0.1; % Thickness of nozzle (in);
+
 %% Conversions
 
 L = L*0.0254; % Length of Casing (m)
@@ -63,6 +37,7 @@ d_star = d_star*0.0254; % Diameter of Throat (m)
 d_case = d_case*0.0254; % Diameter of Casing (m)
 theta_c = theta_c*(pi/180); % Nozzle Converge Angles (radians)
 theta_d = theta_d*(pi/180); % Nozzle Diverge Angles (radians)
+t_n = t_n*0.0254; % Thickness of nozzle (m);
 
 %% Constants
 
@@ -102,9 +77,13 @@ N_a = (P_a*V)/(k_b*T_0);
 xCurr = [0;N_a;d_core;L_g]; 
 PRec = zeros(1,length(t));
 PRec(1) = 101325;
+
 mDotRec = zeros(1,length(t));
+
 kRec = zeros(1,length(t));
 kRec(1) = 1.4;
+
+burn_time = 0;
 
 i=2;
 while(true)
@@ -133,7 +112,11 @@ while(true)
     [kRec(i), ~]= two_phase_flow(R,k,beta,c_s);
     mDotRec(i) = mass_flow_rate_out(A_star,P_0,R,T_0,kRec(i));
 
-    if(d_c>d_case&&P_0<P_a)
+    if(d_c>=d_case&&burn_time==0)
+        burn_time = t(i);
+    end
+
+    if(d_c>=d_case&&P_0<P_a)
         break;
     end
     if(i==tMaxSteps)
@@ -151,8 +134,8 @@ xlabel('Time (s)', 'FontSize', 11)
 ylabel('Chamber Pressure (psi)', 'FontSize', 11)
 
 iMax = i-1;
-burn_time = t(iMax);
-P_avg = sum(PRec(1:iMax).*dtRec(1:iMax))/burn_time;
+total_time = t(iMax);
+P_avg = sum(PRec(1:iMax).*dtRec(1:iMax))/total_time;
 P_max = max(PRec);
 
 fprintf("Average Pressure: %5.2fpsi\n",P_avg/6894.76);
@@ -180,7 +163,7 @@ for u = 1:iMax
 
 end
 
-P_e_avg = sum(P_eRec(1:iMax).*dtRec(1:iMax))/burn_time;
+P_e_avg = sum(P_eRec(1:iMax).*dtRec(1:iMax))/total_time;
 
 % figure()
 % plot(t(1:i-1),P_eRec(1:i-1)./6894.76)
@@ -205,7 +188,7 @@ title("Thrust over Burn")
 xlabel('Time (s)', 'FontSize', 11)
 ylabel('Thrust (N)', 'FontSize', 11)
 
-F_avg = sum(FRec(1:iMax).*dtRec(1:iMax))/burn_time;
+F_avg = sum(FRec(1:iMax).*dtRec(1:iMax))/total_time;
 F_max = max(FRec);
 
 fprintf("Average Thrust: %5.2fN\n",F_avg);
@@ -213,13 +196,45 @@ fprintf("Max Thrust: %5.2fN\n\n",F_max);
 
 %% Total Impulse
 
-I_t = F_avg*burn_time;
+I_t = F_avg*total_time;
 fprintf("Total Impulse: %5.2fNs\n",I_t);
 
 %% Specific Impulse
 
 Isp = I_t/(m_p*g);
-fprintf("Specific Impulse: %5.2fs\n",Isp);
+fprintf("Specific Impulse: %5.2fs\n\n",Isp);
+
+%% Throat Temperature
+
+if(thermal)
+
+    xCurr = T_a;
+
+    TRec = zeros(length(t),1);
+    T(1) = xCurr;
+
+    i = 1;
+    while(t(i)<burn_time)
+
+        k1=temperature_dynamics(xCurr,R,kRec(i),K_n,T_0,PRec(i),M_p,k_b,N_A,d_star,C_n,rho_n,t_n)*dt;
+        k2=temperature_dynamics(xCurr+1/2*k1,R,kRec(i),K_n,T_0,PRec(i),M_p,k_b,N_A,d_star,C_n,rho_n,t_n)*dt;
+        k3=temperature_dynamics(xCurr+1/2*k2,R,kRec(i),K_n,T_0,PRec(i),M_p,k_b,N_A,d_star,C_n,rho_n,t_n)*dt;
+        k4=temperature_dynamics(xCurr+k3,R,kRec(i),K_n,T_0,PRec(i),M_p,k_b,N_A,d_star,C_n,rho_n,t_n)*dt;
+        xCurr=xCurr+1/6*k1+1/3*k2+1/3*k3+1/6*k4;
+
+        TRec(i) = xCurr;
+
+        i = i+1;
+    end
+    
+    figure()
+    plot(t(1:i-1),TRec(1:i-1))
+    title("Temperature of Nozzle over Burn")
+    xlabel('Time (s)', 'FontSize', 11)
+    ylabel('Temperature (K)', 'FontSize', 11)
+
+    fprintf("Max Temperature of Nozzle: %4.0fN\n\n",TRec(i-1));
+end
 
 %% Functions
 
@@ -294,4 +309,62 @@ function [k,R] = two_phase_flow(R,k,beta,c_s)
     R = (1-beta)*R;
 end
 
+function TDot = temperature_dynamics(TCurr,R,k,K_n,T0,P0,M_p,k_b,N_A,d,C_n,rho_n,t_n)
+    Cp = R/(k-1);
+    Pr = (2/5)*k;
+    mu = Pr*(K_n/Cp);
+
+    T = T0*(1+((k-1)/2))^-1;
+    v = (k*R*T)^(1/2);
+    rho0 = (P0*M_p)/(k_b*T0*N_A);
+    rho = rho0*(1+((k-1)/2))^((k-1)/2);
+    Re = (rho*v*d)/mu;
+
+    St = 0.023*Re^(-1/5)*Pr^(-0.067);
+    h = St*rho*v*Cp;
+    QDot = h*(T-TCurr);
+    TDot = QDot/(C_n*rho_n*t_n);
+end
+
+%% Assumptions
+
+% Chamber Pressure
+%   The gasses in the chamber perfectly mix instantaneously
+%   The entire burn area instantly starts combusting at the start of the burn
+%   The chamber is always at the combustion temperture
+%   Constant ratio of specific heats for each species
+%   All propellent instantly becomes gaseous when its burned
+%   Flow is isentropic
+%   Ideal gas
+%   Exhaust is choked in the throat
+%   The ends maintain a square corner
+%   Burn rate is the same everywhere
+
+% Expansion Ratio
+%   Flow is isentropic
+%   Ideal gas
+%   All air has cleared out of the chamber by the average pressure
+
+% Exit Pressure
+%   Flow is isentropic
+%   Ideal gas
+%   Exhaust is choked in the throat
+
+% Thrust
+%   Flow is isentropic
+%   Calorically Perfect Gas
+%   Alluminum particles are the only non-gas in the exhaust
+
+% Total Impulse
+%   None
+
+% Specific Impulse
+%   None
+
+% Throat Temperature
+%   Flow is isentropic
+%   Ideal gas
+%   Exhaust is choked in the throat
+%   The entire thickness of the throat is the same temperature
+%   The chamber is always at the combustion temperture
 

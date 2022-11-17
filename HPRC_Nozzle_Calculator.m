@@ -10,8 +10,9 @@ d_case = 2; % Diameter of Casing (in)
 M_p = 0.02367; % Molar Mass of Propellent (kgmol^-1)
 T_0 = 2773; % Combustion Temperature (K)
 rho_p = 1668.474187; % Density of Solid Propellent (kg/m^3)
-a = 3.51398*10^-5; % Burn Coeffient (ms^-1Pa^1n)
-n = 0.327392; % Burn Exponent
+PRangeMax = [1000]; % Max pressure of pressure ranges (psi)
+a = [0.024986]; % Burn Coeffient of pressure ranges (ins^-1psi^1n)
+n = [0.3273]; % Burn Exponent of pressure ranges
 k_p = 1.21; % Ratio of Specific Heats of Propellant
 theta_c = 34.5; % Nozzle Converge Angles (degrees)
 theta_d = 17.5; % Nozzle Diverge Angles (degrees)
@@ -35,6 +36,8 @@ L_g = L_g*0.0254; % Length of Grain (m)
 d_core = d_core*0.0254; % Diameter of the Core (m)
 d_star = d_star*0.0254; % Diameter of Throat (m)
 d_case = d_case*0.0254; % Diameter of Casing (m)
+PRangeMax = PRangeMax.*6894.76; % Max pressure of pressure ranges (psi)
+a = a.*0.0254.*((6894.76).^-n); % Burn Coeffient of pressure ranges (ins^-1psi^1n)
 theta_c = theta_c*(pi/180); % Nozzle Converge Angles (radians)
 theta_d = theta_d*(pi/180); % Nozzle Diverge Angles (radians)
 t_n = t_n*0.0254; % Thickness of nozzle (m);
@@ -85,15 +88,17 @@ kRec(1) = 1.4;
 
 burn_time = 0;
 
+range = 1;
+
 i=2;
 while(true)
     dt = h/(1+exp(-s*(i-b)));
     dtRec(i-1) = dt;
-    
-    k1=chamber_pressure_dynamics(xCurr,L,d_case,M_p,T_0,a,n,k_p,ihibited_ends,R,A_star,N_A,k_b,n_p,k_a,M_a)*dt;
-    k2=chamber_pressure_dynamics(xCurr+1/2*k1,L,d_case,M_p,T_0,a,n,k_p,ihibited_ends,R,A_star,N_A,k_b,n_p,k_a,M_a)*dt;
-    k3=chamber_pressure_dynamics(xCurr+1/2*k2,L,d_case,M_p,T_0,a,n,k_p,ihibited_ends,R,A_star,N_A,k_b,n_p,k_a,M_a)*dt;
-    k4=chamber_pressure_dynamics(xCurr+k3,L,d_case,M_p,T_0,a,n,k_p,ihibited_ends,R,A_star,N_A,k_b,n_p,k_a,M_a)*dt;
+
+    k1=chamber_pressure_dynamics(xCurr,L,d_case,M_p,T_0,a(range),n(range),k_p,ihibited_ends,R,A_star,N_A,k_b,n_p,k_a,M_a)*dt;
+    k2=chamber_pressure_dynamics(xCurr+1/2*k1,L,d_case,M_p,T_0,a(range),n(range),k_p,ihibited_ends,R,A_star,N_A,k_b,n_p,k_a,M_a)*dt;
+    k3=chamber_pressure_dynamics(xCurr+1/2*k2,L,d_case,M_p,T_0,a(range),n(range),k_p,ihibited_ends,R,A_star,N_A,k_b,n_p,k_a,M_a)*dt;
+    k4=chamber_pressure_dynamics(xCurr+k3,L,d_case,M_p,T_0,a(range),n(range),k_p,ihibited_ends,R,A_star,N_A,k_b,n_p,k_a,M_a)*dt;
     xCurr=xCurr+1/6*k1+1/3*k2+1/3*k3+1/6*k4;
     
     t(i)=t(i-1)+dt;
@@ -119,8 +124,16 @@ while(true)
     if(d_c>=d_case&&P_0<P_a)
         break;
     end
+    
+    if(P_0>PRangeMax(range))
+        range = range+1;
+    end
+
+    if(range>length(PRangeMax))
+        fprintf("ERROR: Exceded Pressure Range\n")
+    end
     if(i==tMaxSteps)
-        fprintf("ERROR: Reached Max Time Steps")
+        fprintf("ERROR: Reached Max Time Steps\n")
         break;
     end
     i=i+1;

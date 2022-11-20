@@ -2,11 +2,22 @@ clear; close all; clc;
 
 %% Inputs
 
+%   Casing
 L = 7; % Length of Casing (in)
-L_g = 7; % Length of Grain (in)
+d_case = 1.8; % Diameter of Casing (in)
+
+%   Grain
 d_core = 0.75; % Diameter of the Core (in)
+L_g = 7; % Length of Grain (in)
+ihibited_ends = 0; % Number of Inhibited Ends
+
+%   Nozzle
 d_star = 0.425; % Diameter of Throat (in)
-d_case = 2; % Diameter of Casing (in)
+theta_c = 34.5; % Nozzle Converge Angles (degrees)
+theta_d = 17.5; % Nozzle Diverge Angles (degrees)
+expansion_ratio = 5; % Manual expansion ratio if the auto expansion ratio setting is off
+
+%   Propellant
 M_p = 0.02367; % Molar Mass of Propellent (kgmol^-1)
 T_0 = 2773; % Combustion Temperature (K)
 rho_p = 1668.474187; % Density of Solid Propellent (kg/m^3)
@@ -14,15 +25,10 @@ PRangeMax = [1000]; % Max pressure of pressure ranges (psi)
 a = [0.024986]; % Burn Coeffient of pressure ranges (ins^-1psi^1n)
 n = [0.3273]; % Burn Exponent of pressure ranges
 k_p = 1.21; % Ratio of Specific Heats of Propellant
-theta_c = 34.5; % Nozzle Converge Angles (degrees)
-theta_d = 17.5; % Nozzle Diverge Angles (degrees)
-ihibited_ends = 0; % Number of Inhibited Ends
 c_s = 897; % Specific heat of solid particles in exhaust (m^2s^-2K^-1 | Jkg^-1K^-1)
 beta = 0.075; % Mass fraction of solid particlesin exhaust
 
-%% Nozzle Temperature Inputs
-
-thermal = true; % Only turn on if the nozzle is no being cooled
+%   Throat Temperature 
 T_a = 40; % Temperature of ambient air (F)
 K_n = 15; % Thermal conductivity of nozzle material (Wm^-1K^-1)
 C_n = 500; % Specific heat of nozzle material (m^2s^-2K^-1 | Jkg^-1K^-1)
@@ -66,6 +72,8 @@ m_p = rho_p*(L_g*pi*((d_case/2)^2-(d_core/2)^2)); % Mass of Propellent (kg)
 
 %% Settings
 
+auto_expansion_ratio = true; % Sets if the calculator automatically calculates expansion ratio for average chamber pressure
+thermal = false; % Sets whether calculator calculates temperature of the throat over the burn
 tMaxSteps = 100000; % Maximum Amount of Steps for Chamber Pressure Calculation
 h = 0.000065; % Chamber Pressure dt Height Parameter
 s = 0.0021; % Chamber Pressure dt Shape Parameter
@@ -162,9 +170,12 @@ fprintf("Burn Time: %3.2fs\n\n",burn_time);
 
 %% Expansion Ratio
 
-[expansion_ratio,d_e] = expansion_ratio_calcs(P_avg,P_a,two_phase_flow(R,k_p,beta,c_s),A_star);
+if(auto_expansion_ratio)
+    [expansion_ratio,~] = expansion_ratio_calcs(P_avg,P_a,two_phase_flow(R,k_p,beta,c_s),A_star);
+end
 
 A_e = A_star*expansion_ratio;
+d_e = 2*sqrt(A_e/pi);
 
 fprintf("Expansion Ratio: %4.3f\n",expansion_ratio);
 fprintf("Exit Diameter: %5.5fin\n",d_e/0.0254);

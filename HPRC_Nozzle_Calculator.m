@@ -244,10 +244,10 @@ if(thermal)
     i = 1;
     while(t(i)<burn_time)
 
-        k1=temperature_dynamics(xCurr,R,kRec(i),K_n,T_0,PRec(i),M_p,k_b,N_A,d_star,C_n,rho_n,t_n,emissivity,sigma,h_a,T_a)*dt;
-        k2=temperature_dynamics(xCurr+1/2*k1,R,kRec(i),K_n,T_0,PRec(i),M_p,k_b,N_A,d_star,C_n,rho_n,t_n,emissivity,sigma,h_a,T_a)*dt;
-        k3=temperature_dynamics(xCurr+1/2*k2,R,kRec(i),K_n,T_0,PRec(i),M_p,k_b,N_A,d_star,C_n,rho_n,t_n,emissivity,sigma,h_a,T_a)*dt;
-        k4=temperature_dynamics(xCurr+k3,R,kRec(i),K_n,T_0,PRec(i),M_p,k_b,N_A,d_star,C_n,rho_n,t_n,emissivity,sigma,h_a,T_a)*dt;
+        k1=temperature_dynamics(xCurr,R,kRec(i),K_n,T_0,PRec(i),M_p,k_b,N_A,d_star,C_n,rho_n,t_n,emissivity,sigma,h_a,T_a)*dtRec(i);
+        k2=temperature_dynamics(xCurr+1/2*k1,R,kRec(i),K_n,T_0,PRec(i),M_p,k_b,N_A,d_star,C_n,rho_n,t_n,emissivity,sigma,h_a,T_a)*dtRec(i);
+        k3=temperature_dynamics(xCurr+1/2*k2,R,kRec(i),K_n,T_0,PRec(i),M_p,k_b,N_A,d_star,C_n,rho_n,t_n,emissivity,sigma,h_a,T_a)*dtRec(i);
+        k4=temperature_dynamics(xCurr+k3,R,kRec(i),K_n,T_0,PRec(i),M_p,k_b,N_A,d_star,C_n,rho_n,t_n,emissivity,sigma,h_a,T_a)*dtRec(i);
         xCurr=xCurr+1/6*k1+1/3*k2+1/3*k3+1/6*k4;
 
         TRec(i) = xCurr;

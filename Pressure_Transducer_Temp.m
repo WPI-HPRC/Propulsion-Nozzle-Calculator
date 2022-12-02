@@ -1,8 +1,8 @@
 
 %% Run this after running the main script, it does not work on its own
 
-tube_length = 3.048;
-tube_ID = 0.009525;
+tube_length = 2;
+tube_ID = 0.00635;
 emissivity_exhuast = 0.5; 
 tube_dt = 0.000001;
 
@@ -42,8 +42,8 @@ function xDot = tube_temperature_dynamics(xCurr,R,k,K_n,T0,P0,M_p,k_b,N_A,d,t_n,
 
     St = 0.023*Re^(-1/5)*Pr^(-0.067);
     h = St*rho*v*Cp;
-    QDot = -((emissivity*sigma*T^4) + (h*(T - T_a)));
-    TDot = QDot/(Cp*rho*t_n);
+    q = -((emissivity*sigma*T^4) + (h*(T - T_a)));
+    TDot = q/(Cp*rho*t_n);
     mDot = sqrt(k*R*T);
 
     xDot = [TDot,mDot];

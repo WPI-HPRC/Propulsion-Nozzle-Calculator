@@ -3,8 +3,8 @@ clear; close all; clc;
 %% Inputs
 
 %   Casing
-L = 7; % Length of Casing (in)
-d_case = 1.8; % Diameter of Casing (in)
+L = 7; % Length of Chamber (in)
+d_case = 1.8; % Diameter of Chamber (in)
 
 %   Grain
 d_core = 0.75; % Diameter of the Core (in)

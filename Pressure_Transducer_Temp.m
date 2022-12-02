@@ -1,11 +1,11 @@
 
 %% Run this after running the main script, it does not work on its own
 
-tube_length = 2;
-tube_ID = 0.00635;
-emissivity_exhuast = 0.5; 
-tube_dt = 0.000001;
+tube_length = 2; % Length of pressure transducer tube (m)
+tube_ID = 0.00635; % Inner diameter of pressure transducer tube (m)
+emissivity_tube = 0.03; % Emmissivity of tube
 
+tube_dt = 0.000001;
 xRec = zeros(10000000,2);
 xCurr = [T_0*(1+((k-1)/2))^-1,0];
 xRec(1,:) = xCurr;
@@ -13,10 +13,10 @@ xRec(1,:) = xCurr;
 i = 2;
 while(xRec(i-1,2)<tube_length)
 
-    k1=tube_temperature_dynamics(xCurr,R,k,K_n,T_0,P_avg,M_p,k_b,N_A,d_star,tube_ID/2,emissivity_exhuast,sigma,T_a)*tube_dt;
-    k2=tube_temperature_dynamics(xCurr+1/2*k1,R,k,K_n,T_0,P_avg,M_p,k_b,N_A,d_star,tube_ID/2,emissivity_exhuast,sigma,T_a)*tube_dt;
-    k3=tube_temperature_dynamics(xCurr+1/2*k2,R,k,K_n,T_0,P_avg,M_p,k_b,N_A,d_star,tube_ID/2,emissivity_exhuast,sigma,T_a)*tube_dt;
-    k4=tube_temperature_dynamics(xCurr+k3,R,k,K_n,T_0,P_avg,M_p,k_b,N_A,d_star,tube_ID/2,emissivity_exhuast,sigma,T_a)*tube_dt;
+    k1=tube_temperature_dynamics(xCurr,R,k,K_n,T_0,P_avg,M_p,k_b,N_A,d_star,tube_ID/2,emissivity_tube,sigma,T_a)*tube_dt;
+    k2=tube_temperature_dynamics(xCurr+1/2*k1,R,k,K_n,T_0,P_avg,M_p,k_b,N_A,d_star,tube_ID/2,emissivity_tube,sigma,T_a)*tube_dt;
+    k3=tube_temperature_dynamics(xCurr+1/2*k2,R,k,K_n,T_0,P_avg,M_p,k_b,N_A,d_star,tube_ID/2,emissivity_tube,sigma,T_a)*tube_dt;
+    k4=tube_temperature_dynamics(xCurr+k3,R,k,K_n,T_0,P_avg,M_p,k_b,N_A,d_star,tube_ID/2,emissivity_tube,sigma,T_a)*tube_dt;
     xCurr=xCurr+1/6*k1+1/3*k2+1/3*k3+1/6*k4;
 
     xRec(i,:) = xCurr;

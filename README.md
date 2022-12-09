@@ -2,6 +2,10 @@
 
 # Chamber Pressure
 
+Uses RK4 to numerically solve a system of differential equations for the number of particles in the chamber, core diameter, and length of grain. Solves for chamber pressure from number of particles in the chamber using the ideal gas law.
+
+!()
+
 ### Assumptions <br />
  - The gasses in the chamber perfectly mix instantaneously <br />
  - The entire burn area instantly starts combusting at the start of the burn <br />
@@ -14,20 +18,22 @@
  - The ends maintain a square corner <br />
  - Burn rate is the same everywhere <br />
 	
-Uses RK4 to numerically solve a system of differential equations for the number of particles in the chamber, core diameter, and length of grain. Solves for chamber pressure from number of particles in the chamber using the ideal gas law.
-
 
 # Expansion Ratio
+
+Calculates the expansion ratio based on the average chamber and setting the exit preesure to atmospheric pressure.
+
+!(https://ibb.co/VjFJPCr)
 
 ### Assumptions <br />
  - Flow is isentropic <br />
  - Ideal gas <br />
  - All air has cleared out of the chamber by the average pressure <br />
 
-Calculates the expansion ratio based on the average chamber and setting the exit preesure to atmospheric pressure.
-
 
 # Exit Pressure
+
+!()
 
 ### Assumptions <br />
  - Flow is isentropic <br />
@@ -39,6 +45,8 @@ Numerically solves the expansion ratio formula for exit pressure across chamber 
 
 # Thrust
 
+!()
+
 ### Assumptions <br />
  - Flow is isentropic <br />
  - Calorically Perfect Gas <br />
@@ -49,6 +57,8 @@ Calculates the thrust using the rocket thrust equation for chamber pressure and 
 
 # Total Impulse
 
+!()
+
 ### Assumptions <br />
  - None <br />
 
@@ -56,6 +66,8 @@ Multiplies the average thrust by the burn time to get total impulse.
 
 
 # Specific Impulse
+
+!()
 
 ### Assumptions <br />
  - None <br />

@@ -19,56 +19,56 @@ Uses RK4 to numerically solve a system of differential equations for the number 
 
 # Expansion Ratio
 
-Assumptions
-    Flow is isentropic
-    Ideal gas
-    All air has cleared out of the chamber by the average pressure
+### Assumptions <br />
+ - Flow is isentropic <br />
+ - Ideal gas <br />
+ - All air has cleared out of the chamber by the average pressure <br />
 
 Calculates the expansion ratio based on the average chamber and setting the exit preesure to atmospheric pressure.
 
 
 # Exit Pressure
 
-Assumptions
-    Flow is isentropic
-    Ideal gas
-    Exhaust is choked in the throat
+### Assumptions <br />
+ - Flow is isentropic <br />
+ - Ideal gas <br />
+ - Exhaust is choked in the throat <br />
 
 Numerically solves the expansion ratio formula for exit pressure across chamber pressure during the burn.
 
 
 # Thrust
 
-Assumptions
-    Flow is isentropic
-    Calorically Perfect Gas
-    Alluminum particles are the only non-gas in the exhaust
+### Assumptions <br />
+ - Flow is isentropic <br />
+ - Calorically Perfect Gas <br />
+ - Alluminum particles are the only non-gas in the exhaust <br />
 
 Calculates the thrust using the rocket thrust equation for chamber pressure and exit pressure during the burn.
 
 
 # Total Impulse
 
-Assumptions
-    None
+### Assumptions <br />
+ - None <br />
 
 Multiplies the average thrust by the burn time to get total impulse.
 
 
 # Specific Impulse
 
-Assumptions
-    None
+### Assumptions <br />
+ - None <br />
 	
 Divides total impulse by the mass of the propellent times gravity to get specific impulse.
 
 
 # Throat Temperature
 
-Assumptions
-    Flow is isentropic
-    Ideal gas
-    Exhaust is choked in the throat
-    The entire thickness of the throat is the same temperature
-    The chamber is always at the combustion temperture
+### Assumptions <br />
+ - Flow is isentropic <br />
+ - Ideal gas <br />
+ - Exhaust is choked in the throat <br />
+ - The entire thickness of the throat is the same temperature <br />
+ - The chamber is always at the combustion temperture <br />
 	

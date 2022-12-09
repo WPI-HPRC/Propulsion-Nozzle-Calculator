@@ -4,7 +4,7 @@
 
 Uses RK4 to numerically solve a system of differential equations for the number of particles in the chamber, core diameter, and length of grain. Solves for chamber pressure from number of particles in the chamber using the ideal gas law.
 
-![Chamber Pressure Equation]()
+
 
 ### Assumptions <br />
  - The gasses in the chamber perfectly mix instantaneously <br />
@@ -23,8 +23,6 @@ Uses RK4 to numerically solve a system of differential equations for the number 
 
 Calculates the expansion ratio based on the average chamber and setting the exit preesure to atmospheric pressure.
 
-![Expansion Ratio Equation](https://i.ibb.co/R3g0bwW/Screenshot-2022-12-09-134326.png)
-
 $\frac{A^*}{A_e}=\left(\frac{k+1}{2}\right)^{\frac{1}{k-1}}\left(\frac{P_a}{P_0}\right)^{\frac{1}{k}} \sqrt{\left(\frac{k+1}{k-1}\right)\left(1-\left(\frac{P_a}{P_0}\right)^{\frac{k-1}{k}}\right)}$
 
 ### Assumptions <br />
@@ -37,7 +35,7 @@ $\frac{A^*}{A_e}=\left(\frac{k+1}{2}\right)^{\frac{1}{k-1}}\left(\frac{P_a}{P_0}
 
 Numerically solves the expansion ratio formula for exit pressure across chamber pressure during the burn.
 
-![Exit Pressure Equation](https://i.ibb.co/tDyTyK4/Screenshot-2022-12-09-134445.png)
+$P_e=\left(\frac{A^*}{A_e}\right)^k\left(\frac{k+1}{2}\right)^{\frac{k}{1-k}}\left(\frac{k-1}{k+1}\right)^{\frac{k}{2}} P_0\left(1-\left(\frac{P_e}{P_0}\right)^{\frac{k-1}{k}}\right)^{-\frac{k}{2}}$
 
 ### Assumptions <br />
  - Flow is isentropic <br />
@@ -49,7 +47,7 @@ Numerically solves the expansion ratio formula for exit pressure across chamber 
 
 Calculates the thrust using the rocket thrust equation for chamber pressure and exit pressure during the burn.
 
-![Thrust Equation](https://i.ibb.co/MVBhtS3/Screenshot-2022-12-09-134554.png)
+$F=\dot{m} v_e+\left(P_e-P_a\right) A_e$
 
 ### Assumptions <br />
  - Flow is isentropic <br />
@@ -61,7 +59,7 @@ Calculates the thrust using the rocket thrust equation for chamber pressure and 
 
 Multiplies the average thrust by the burn time to get total impulse.
 
-![Total Impulse Equation](https://i.ibb.co/QYkVXVH/Screenshot-2022-12-09-134634.png)
+$I_t=F_{\text {avg }} t_{\text {burn }}$
 
 ### Assumptions <br />
  - None <br />
@@ -71,7 +69,7 @@ Multiplies the average thrust by the burn time to get total impulse.
 
 Divides total impulse by the mass of the propellent times gravity to get specific impulse.
 
-![Specific Impulse Equation]()
+$I_{s p}=\frac{I_t}{m g}$
 
 ### Assumptions <br />
  - None <br />

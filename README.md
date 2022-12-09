@@ -33,7 +33,7 @@ Calculates the expansion ratio based on the average chamber and setting the exit
 
 # Exit Pressure
 
-![Exit Pressure Equation]()
+![Exit Pressure Equation](https://i.ibb.co/tDyTyK4/Screenshot-2022-12-09-134445.png)
 
 ### Assumptions <br />
  - Flow is isentropic <br />
@@ -45,7 +45,7 @@ Numerically solves the expansion ratio formula for exit pressure across chamber 
 
 # Thrust
 
-![Thrust Equation]()
+![Thrust Equation](https://i.ibb.co/MVBhtS3/Screenshot-2022-12-09-134554.png)
 
 ### Assumptions <br />
  - Flow is isentropic <br />
@@ -57,7 +57,7 @@ Calculates the thrust using the rocket thrust equation for chamber pressure and 
 
 # Total Impulse
 
-![Total Impulse Equation]()
+![Total Impulse Equation](https://i.ibb.co/QYkVXVH/Screenshot-2022-12-09-134634.png)
 
 ### Assumptions <br />
  - None <br />

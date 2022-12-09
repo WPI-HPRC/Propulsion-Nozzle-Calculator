@@ -25,8 +25,8 @@ Calculates the expansion ratio based on the average chamber and setting the exit
 
 ![Expansion Ratio Equation](https://i.ibb.co/R3g0bwW/Screenshot-2022-12-09-134326.png)
 
-\frac{A^*}{A_e}=\left(\frac{k+1}{2}\right)^{\frac{1}{k-1}}\left(\frac{P_a}{P_0}\right)^{\frac{1}{k}} \sqrt{\left(\frac{k+1}{k-1}\right)\left(1-\left(\frac{P_a}{P_0}\right)^{\frac{k-1}{k}}\right)}
- 
+$\frac{A^*}{A_e}=\left(\frac{k+1}{2}\right)^{\frac{1}{k-1}}\left(\frac{P_a}{P_0}\right)^{\frac{1}{k}} \sqrt{\left(\frac{k+1}{k-1}\right)\left(1-\left(\frac{P_a}{P_0}\right)^{\frac{k-1}{k}}\right)}$
+
 ### Assumptions <br />
  - Flow is isentropic <br />
  - Ideal gas <br />

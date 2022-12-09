@@ -4,7 +4,7 @@
 
 Uses RK4 to numerically solve a system of differential equations for the number of particles in the chamber, core diameter, and length of grain. Solves for chamber pressure from number of particles in the chamber using the ideal gas law.
 
-!()
+![Chamber Pressure Equation]()
 
 ### Assumptions <br />
  - The gasses in the chamber perfectly mix instantaneously <br />
@@ -23,7 +23,7 @@ Uses RK4 to numerically solve a system of differential equations for the number 
 
 Calculates the expansion ratio based on the average chamber and setting the exit preesure to atmospheric pressure.
 
-![Expansion Ratio Equation](https://i.ibb.co/LzmRGzy/image-8.png)
+![Expansion Ratio Equation](https://i.ibb.co/R3g0bwW/Screenshot-2022-12-09-134326.png)
 
 ### Assumptions <br />
  - Flow is isentropic <br />
@@ -33,7 +33,7 @@ Calculates the expansion ratio based on the average chamber and setting the exit
 
 # Exit Pressure
 
-!()
+![Exit Pressure Equation]()
 
 ### Assumptions <br />
  - Flow is isentropic <br />
@@ -45,7 +45,7 @@ Numerically solves the expansion ratio formula for exit pressure across chamber 
 
 # Thrust
 
-!()
+![Thrust Equation]()
 
 ### Assumptions <br />
  - Flow is isentropic <br />
@@ -57,7 +57,7 @@ Calculates the thrust using the rocket thrust equation for chamber pressure and 
 
 # Total Impulse
 
-!()
+![Total Impulse Equation]()
 
 ### Assumptions <br />
  - None <br />
@@ -67,7 +67,7 @@ Multiplies the average thrust by the burn time to get total impulse.
 
 # Specific Impulse
 
-!()
+![Specific Impulse Equation]()
 
 ### Assumptions <br />
  - None <br />

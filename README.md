@@ -2,17 +2,17 @@
 
 # Chamber Pressure
 
-**Assumptions** <br />
-	The gasses in the chamber perfectly mix instantaneously <br />
-    The entire burn area instantly starts combusting at the start of the burn <br />
-    The chamber is always at the combustion temperture <br />
-    Constant ratio of specific heats for each species <br />
-    All propellent instantly becomes gaseous when its burned <br />
-    Flow is isentropic <br />
-    Ideal gas <br />
-    Exhaust is choked in the throat <br />
-    The ends maintain a square corner <br />
-    Burn rate is the same everywhere <br />
+##Assumptions <br />
+ - The gasses in the chamber perfectly mix instantaneously <br />
+ - The entire burn area instantly starts combusting at the start of the burn <br />
+ - The chamber is always at the combustion temperture <br />
+ - Constant ratio of specific heats for each species <br />
+ - All propellent instantly becomes gaseous when its burned <br />
+ - Flow is isentropic <br />
+ - Ideal gas <br />
+ - Exhaust is choked in the throat <br />
+ - The ends maintain a square corner <br />
+ - Burn rate is the same everywhere <br />
 	
 Uses RK4 to numerically solve a system of differential equations for the number of particles in the chamber, core diameter, and length of grain. Solves for chamber pressure from number of particles in the chamber using the ideal gas law.
 

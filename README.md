@@ -2,7 +2,7 @@
 
 # Chamber Pressure
 
-Assumptions <br />
+**Assumptions** <br />
 	The gasses in the chamber perfectly mix instantaneously <br />
     The entire burn area instantly starts combusting at the start of the burn <br />
     The chamber is always at the combustion temperture <br />

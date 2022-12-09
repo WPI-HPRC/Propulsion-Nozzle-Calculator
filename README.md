@@ -1,4 +1,4 @@
-# Propulsion-Nozzle-Calculator
+# **Propulsion Nozzle Calculator**
 
 # Chamber Pressure
 
@@ -23,7 +23,7 @@ Uses RK4 to numerically solve a system of differential equations for the number 
 
 Calculates the expansion ratio based on the average chamber and setting the exit preesure to atmospheric pressure.
 
-$\frac{A^*}{A_e}=\left(\frac{k+1}{2}\right)^{\frac{1}{k-1}}\left(\frac{P_a}{P_0}\right)^{\frac{1}{k}} \sqrt{\left(\frac{k+1}{k-1}\right)\left(1-\left(\frac{P_a}{P_0}\right)^{\frac{k-1}{k}}\right)}$
+$\frac{A^*}{A_e}=\left(\frac{\gamma+1}{2}\right)^{\frac{1}{\gamma-1}}\left(\frac{P_a}{P_0}\right)^{\frac{1}{\gamma}} \sqrt{\left(\frac{\gamma+1}{\gamma-1}\right)\left(1-\left(\frac{P_a}{P_0}\right)^{\frac{\gamma-1}{\gamma}}\right)}$
 
 ### Assumptions <br />
  - Flow is isentropic <br />
@@ -35,7 +35,7 @@ $\frac{A^*}{A_e}=\left(\frac{k+1}{2}\right)^{\frac{1}{k-1}}\left(\frac{P_a}{P_0}
 
 Numerically solves the expansion ratio formula for exit pressure across chamber pressure during the burn.
 
-$P_e=\left(\frac{A^*}{A_e}\right)^k\left(\frac{k+1}{2}\right)^{\frac{k}{1-k}}\left(\frac{k-1}{k+1}\right)^{\frac{k}{2}} P_0\left(1-\left(\frac{P_e}{P_0}\right)^{\frac{k-1}{k}}\right)^{-\frac{k}{2}}$
+$P_e=\left(\frac{A^*}{A_e}\right)^\gamma\left(\frac{\gamma+1}{2}\right)^{\frac{\gamma}{1-\gamma}}\left(\frac{\gamma-1}{\gamma+1}\right)^{\frac{\gamma}{2}} P_0\left(1-\left(\frac{P_e}{P_0}\right)^{\frac{\gamma-1}{\gamma}}\right)^{-\frac{\gamma}{2}}$
 
 ### Assumptions <br />
  - Flow is isentropic <br />

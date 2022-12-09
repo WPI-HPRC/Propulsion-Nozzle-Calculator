@@ -23,7 +23,7 @@ Uses RK4 to numerically solve a system of differential equations for the number 
 
 Calculates the expansion ratio based on the average chamber and setting the exit preesure to atmospheric pressure.
 
-![Expansion Ratio Equation](https://ibb.co/VjFJPCr)
+![Expansion Ratio Equation](https://i.ibb.co/LzmRGzy/image-8.png)
 
 ### Assumptions <br />
  - Flow is isentropic <br />

@@ -25,6 +25,8 @@ Calculates the expansion ratio based on the average chamber and setting the exit
 
 ![Expansion Ratio Equation](https://i.ibb.co/R3g0bwW/Screenshot-2022-12-09-134326.png)
 
+ <math style="font-family:null" xmlns="http://www.w3.org/1998/Math/MathML"><mfrac><msup><mi>A</mi><mi>*</mi></msup><msub><mi>A</mi><mi>e</mi></msub></mfrac><mo>=</mo><msup><mrow><mo>(</mo><mfrac><mrow><mi>k</mi><mo>+</mo><mn>1</mn></mrow><mn>2</mn></mfrac><mo>)</mo></mrow><mfrac><mn>1</mn><mrow><mi>k</mi><mo>-</mo><mn>1</mn></mrow></mfrac></msup><msup><mrow><mo>(</mo><mfrac><msub><mi>P</mi><mi>e</mi></msub><msub><mi>P</mi><mn>0</mn></msub></mfrac><mo>)</mo></mrow><mfrac><mn>1</mn><mi>k</mi></mfrac></msup><msqrt><mo>(</mo><mfrac><mrow><mi>k</mi><mo>+</mo><mn>1</mn></mrow><mrow><mi>k</mi><mo>-</mo><mn>1</mn></mrow></mfrac><mo>)</mo><mo>(</mo><mn>1</mn><mo>-</mo><msup><mrow><mo>(</mo><mfrac><msub><mi>P</mi><mi>e</mi></msub><msub><mi>P</mi><mn>0</mn></msub></mfrac><mo>)</mo></mrow><mfrac><mrow><mi>k</mi><mo>-</mo><mn>1</mn></mrow><mi>k</mi></mfrac></msup><mo>)</mo></msqrt></math>	
+ 
 ### Assumptions <br />
  - Flow is isentropic <br />
  - Ideal gas <br />

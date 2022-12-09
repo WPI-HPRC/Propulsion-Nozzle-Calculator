@@ -25,7 +25,7 @@ Calculates the expansion ratio based on the average chamber and setting the exit
 
 ![Expansion Ratio Equation](https://i.ibb.co/R3g0bwW/Screenshot-2022-12-09-134326.png)
 
- <math style="font-family:null" xmlns="http://www.w3.org/1998/Math/MathML"><mfrac><msup><mi>A</mi><mi>*</mi></msup><msub><mi>A</mi><mi>e</mi></msub></mfrac><mo>=</mo><msup><mrow><mo>(</mo><mfrac><mrow><mi>k</mi><mo>+</mo><mn>1</mn></mrow><mn>2</mn></mfrac><mo>)</mo></mrow><mfrac><mn>1</mn><mrow><mi>k</mi><mo>-</mo><mn>1</mn></mrow></mfrac></msup><msup><mrow><mo>(</mo><mfrac><msub><mi>P</mi><mi>e</mi></msub><msub><mi>P</mi><mn>0</mn></msub></mfrac><mo>)</mo></mrow><mfrac><mn>1</mn><mi>k</mi></mfrac></msup><msqrt><mo>(</mo><mfrac><mrow><mi>k</mi><mo>+</mo><mn>1</mn></mrow><mrow><mi>k</mi><mo>-</mo><mn>1</mn></mrow></mfrac><mo>)</mo><mo>(</mo><mn>1</mn><mo>-</mo><msup><mrow><mo>(</mo><mfrac><msub><mi>P</mi><mi>e</mi></msub><msub><mi>P</mi><mn>0</mn></msub></mfrac><mo>)</mo></mrow><mfrac><mrow><mi>k</mi><mo>-</mo><mn>1</mn></mrow><mi>k</mi></mfrac></msup><mo>)</mo></msqrt></math>	
+\frac{A^*}{A_e}=\left(\frac{k+1}{2}\right)^{\frac{1}{k-1}}\left(\frac{P_a}{P_0}\right)^{\frac{1}{k}} \sqrt{\left(\frac{k+1}{k-1}\right)\left(1-\left(\frac{P_a}{P_0}\right)^{\frac{k-1}{k}}\right)}
  
 ### Assumptions <br />
  - Flow is isentropic <br />
@@ -35,6 +35,8 @@ Calculates the expansion ratio based on the average chamber and setting the exit
 
 # Exit Pressure
 
+Numerically solves the expansion ratio formula for exit pressure across chamber pressure during the burn.
+
 ![Exit Pressure Equation](https://i.ibb.co/tDyTyK4/Screenshot-2022-12-09-134445.png)
 
 ### Assumptions <br />
@@ -42,10 +44,10 @@ Calculates the expansion ratio based on the average chamber and setting the exit
  - Ideal gas <br />
  - Exhaust is choked in the throat <br />
 
-Numerically solves the expansion ratio formula for exit pressure across chamber pressure during the burn.
-
 
 # Thrust
+
+Calculates the thrust using the rocket thrust equation for chamber pressure and exit pressure during the burn.
 
 ![Thrust Equation](https://i.ibb.co/MVBhtS3/Screenshot-2022-12-09-134554.png)
 
@@ -54,28 +56,26 @@ Numerically solves the expansion ratio formula for exit pressure across chamber 
  - Calorically Perfect Gas <br />
  - Alluminum particles are the only non-gas in the exhaust <br />
 
-Calculates the thrust using the rocket thrust equation for chamber pressure and exit pressure during the burn.
-
 
 # Total Impulse
+
+Multiplies the average thrust by the burn time to get total impulse.
 
 ![Total Impulse Equation](https://i.ibb.co/QYkVXVH/Screenshot-2022-12-09-134634.png)
 
 ### Assumptions <br />
  - None <br />
 
-Multiplies the average thrust by the burn time to get total impulse.
-
 
 # Specific Impulse
+
+Divides total impulse by the mass of the propellent times gravity to get specific impulse.
 
 ![Specific Impulse Equation]()
 
 ### Assumptions <br />
  - None <br />
 	
-Divides total impulse by the mass of the propellent times gravity to get specific impulse.
-
 
 # Throat Temperature
 

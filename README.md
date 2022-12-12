@@ -10,7 +10,7 @@ $P_0=\frac{N}{V} k_b T_0$ <br />
 $r=a\left(P_0\right)^n$ <br />
 $\dot{V}=(2-e_(inhib))(r \pi)\left[\left(\frac{d_c}{2}\right)^2-\left(\frac{d_c}{2}+r\right)^2\right]+L_g \pi\left[\left(\frac{d_c}{2}+r\right)^2-\left(\frac{d_c}{2}\right)^2\right]$ <br />
 $\dot{m}=A^* P_o \sqrt{\frac{k}{R T_0}}\left(\frac{k+1}{2}\right)^{\frac{k+1}{2(1-k)}}$ <br />
-$\left[\begin{array}{c}\dot{N}_p \\ \dot{N}_a \\ \dot{d}_c \\ \dot{L}_g\end{array}\right]=\left[\begin{array}{c}n_p \dot{V}-\frac{N_A}{M_p}\left(\frac{N_p}{N_p+N_a}\right) \dot{m} \\ -\frac{N_A}{M_p}\left(\frac{N_p}{N_p+N_a}\right) \dot{m} \\ 2 r \\ (\text { e_(inhib) }-2) r\end{array}\right]$ <br />
+$$\underline{\dot{x}}=\left[\begin{array}{c}\dot{N}_p \\ \dot{N}_a \\ \dot{d}_c \\ \dot{L}_g\end{array}\right]=\left[\begin{array}{c}n_p \dot{V}-\frac{N_A}{M_p}\left(\frac{N_p}{N_p+N_a}\right) \dot{m} \\ -\frac{N_A}{M_p}\left(\frac{N_p}{N_p+N_a}\right) \dot{m} \\ 2 r \\ (\text { e_(inhib) }-2) r\end{array}\right]$$ <br />
 
 ### Assumptions <br />
  - The gasses in the chamber perfectly mix instantaneously <br />

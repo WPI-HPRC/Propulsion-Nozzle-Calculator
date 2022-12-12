@@ -99,7 +99,7 @@ $$
 Divides total impulse by the mass of the propellent times gravity to get specific impulse.
 
 $$
-I_{s p}=\frac{I_t}{w}=\frac{I_t}{m g}
+I_{s p}=\frac{I_t}{m g}
 $$
 
 ### Assumptions <br />

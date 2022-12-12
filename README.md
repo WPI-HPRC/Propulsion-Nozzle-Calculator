@@ -18,7 +18,7 @@ $$
 & V=L_g \pi\left(\frac{d_c}{2}\right)^2+\left(L-L_g\right) \pi\left(\frac{d_c}{2}\right)^2 \\
 & P_0=\frac{N}{V} k_b T_0 \\
 & r=a\left(P_0\right)^n \\
-& \dot{V}=(2-\# \text { inhibited ends })(r \pi)\left[\left(\frac{d_c}{2}\right)^2-\left(\frac{d_c}{2}+r\right)^2\right]+L_g \pi\left[\left(\frac{d_c}{2}+r\right)^2-\left(\frac{d_c}{2}\right)^2\right] \\
+& \dot{V}=(2-e_(inhib))(r \pi)\left[\left(\frac{d_c}{2}\right)^2-\left(\frac{d_c}{2}+r\right)^2\right]+L_g \pi\left[\left(\frac{d_c}{2}+r\right)^2-\left(\frac{d_c}{2}\right)^2\right] \\
 & \dot{m}=A^* P_o \sqrt{\frac{k}{R T_0}}\left(\frac{k+1}{2}\right)^{\frac{k+1}{2(1-k)}} \\
 & \underline{\dot{x}}=\left[\begin{array}{c}
 \dot{N}_p \\
@@ -29,7 +29,7 @@ $$
 n_p \dot{V}-\frac{N_A}{M_p}\left(\frac{N_p}{N_p+N_a}\right) \dot{m} \\
 -\frac{N_A}{M_p}\left(\frac{N_p}{N_p+N_a}\right) \dot{m} \\
 2 r \\
-(\text { \#inhibited ends }-2) r
+(e_(inhib)-2) r
 \end{array}\right] \\
 &
 \end{aligned}
@@ -41,7 +41,7 @@ $$
 & V=L_g \pi\left(\frac{d_c}{2}\right)^2+\left(L-L_g\right) \pi\left(\frac{d_c}{2}\right)^2 \\
 & P_0=\frac{N}{V} k_b T_0 \\
 & r=a\left(P_0\right)^n \\
-& \dot{V}=(2-\# \text { inhibited ends })(r \pi)\left[\left(\frac{d_c}{2}\right)^2-\left(\frac{d_c}{2}+r\right)^2\right]+L_g \pi\left[\left(\frac{d_c}{2}+r\right)^2-\left(\frac{d_c}{2}\right)^2\right] \\
+& \dot{V}=(2-e_(inhib))(r \pi)\left[\left(\frac{d_c}{2}\right)^2-\left(\frac{d_c}{2}+r\right)^2\right]+L_g \pi\left[\left(\frac{d_c}{2}+r\right)^2-\left(\frac{d_c}{2}\right)^2\right] \\
 & \dot{m}=A^* P_o \sqrt{\frac{k}{R T_0}}\left(\frac{k+1}{2}\right)^{\frac{k+1}{2(1-k)}} \\
 & \underline{\dot{x}}=\left[\begin{array}{c}
 \dot{N}_p \\
@@ -52,7 +52,7 @@ $$
 n_p \dot{V}-\frac{N_A}{M_p}\left(\frac{N_p}{N_p+N_a}\right) \dot{m} \\
 -\frac{N_A}{M_p}\left(\frac{N_p}{N_p+N_a}\right) \dot{m} \\
 2 r \\
-(\text { \#inhibited ends }-2) r
+(e_(inhib)-2) r
 \end{array}\right] \\
 &
 \end{aligned}

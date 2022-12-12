@@ -12,6 +12,52 @@ $\dot{V}=(2-e_(inhib))(r \pi)\left[\left(\frac{d_c}{2}\right)^2-\left(\frac{d_c}
 $\dot{m}=A^* P_o \sqrt{\frac{k}{R T_0}}\left(\frac{k+1}{2}\right)^{\frac{k+1}{2(1-k)}}$ <br />
 $$ \left[\lbrack \matrix{\dot{N}_p \cr \dot{N}_a \cr \dot{d}_c \cr \dot{L}_g} \right\rbrack]=\left[\lbrack \matrix{n_p \dot{V}-\frac{N_A}{M_p}\left(\frac{N_p}{N_p+N_a}\right) \dot{m} \cr -\frac{N_A}{M_p}\left(\frac{N_p}{N_p+N_a}\right) \dot{m} \cr 2 r \cr (\text { e_(inhib) }-2) r}\right\rbrack] $$ <br />
 
+$$
+\begin{aligned}
+& k=\frac{N_p k_p+N_a k_a}{N_p+N_a} \\
+& V=L_g \pi\left(\frac{d_c}{2}\right)^2+\left(L-L_g\right) \pi\left(\frac{d_c}{2}\right)^2 \\
+& P_0=\frac{N}{V} k_b T_0 \\
+& r=a\left(P_0\right)^n \\
+& \dot{V}=(2-\# \text { inhibited ends })(r \pi)\left[\left(\frac{d_c}{2}\right)^2-\left(\frac{d_c}{2}+r\right)^2\right]+L_g \pi\left[\left(\frac{d_c}{2}+r\right)^2-\left(\frac{d_c}{2}\right)^2\right] \\
+& \dot{m}=A^* P_o \sqrt{\frac{k}{R T_0}}\left(\frac{k+1}{2}\right)^{\frac{k+1}{2(1-k)}} \\
+& \underline{\dot{x}}=\left[\begin{array}{c}
+\dot{N}_p \\
+\dot{N}_a \\
+\dot{d}_c \\
+\dot{L}_g
+\end{array}\right]=\left[\begin{array}{c}
+n_p \dot{V}-\frac{N_A}{M_p}\left(\frac{N_p}{N_p+N_a}\right) \dot{m} \\
+-\frac{N_A}{M_p}\left(\frac{N_p}{N_p+N_a}\right) \dot{m} \\
+2 r \\
+(\text { \#inhibited ends }-2) r
+\end{array}\right] \\
+&
+\end{aligned}
+$$
+
+\begin{equation}
+\begin{aligned}
+& k=\frac{N_p k_p+N_a k_a}{N_p+N_a} \\
+& V=L_g \pi\left(\frac{d_c}{2}\right)^2+\left(L-L_g\right) \pi\left(\frac{d_c}{2}\right)^2 \\
+& P_0=\frac{N}{V} k_b T_0 \\
+& r=a\left(P_0\right)^n \\
+& \dot{V}=(2-\# \text { inhibited ends })(r \pi)\left[\left(\frac{d_c}{2}\right)^2-\left(\frac{d_c}{2}+r\right)^2\right]+L_g \pi\left[\left(\frac{d_c}{2}+r\right)^2-\left(\frac{d_c}{2}\right)^2\right] \\
+& \dot{m}=A^* P_o \sqrt{\frac{k}{R T_0}}\left(\frac{k+1}{2}\right)^{\frac{k+1}{2(1-k)}} \\
+& \underline{\dot{x}}=\left[\begin{array}{c}
+\dot{N}_p \\
+\dot{N}_a \\
+\dot{d}_c \\
+\dot{L}_g
+\end{array}\right]=\left[\begin{array}{c}
+n_p \dot{V}-\frac{N_A}{M_p}\left(\frac{N_p}{N_p+N_a}\right) \dot{m} \\
+-\frac{N_A}{M_p}\left(\frac{N_p}{N_p+N_a}\right) \dot{m} \\
+2 r \\
+(\text { \#inhibited ends }-2) r
+\end{array}\right] \\
+&
+\end{aligned}
+\end{equation}
+
 ### Assumptions <br />
  - The gasses in the chamber perfectly mix instantaneously <br />
  - The entire burn area instantly starts combusting at the start of the burn <br />

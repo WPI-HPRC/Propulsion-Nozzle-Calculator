@@ -4,21 +4,13 @@
 
 Uses RK4 to numerically solve a system of differential equations for the number of particles in the chamber, core diameter, and length of grain. Solves for chamber pressure from number of particles in the chamber using the ideal gas law.
 
-$k=\frac{N_p k_p+N_a k_a}{N_p+N_a}$ <br />
-$V=L_g \pi\left(\frac{d_c}{2}\right)^2+\left(L-L_g\right) \pi\left(\frac{d_c}{2}\right)^2$ <br />
-$P_0=\frac{N}{V} k_b T_0$ <br />
-$r=a\left(P_0\right)^n$ <br />
-$\dot{V}=(2-e_(inhib))(r \pi)\left[\left(\frac{d_c}{2}\right)^2-\left(\frac{d_c}{2}+r\right)^2\right]+L_g \pi\left[\left(\frac{d_c}{2}+r\right)^2-\left(\frac{d_c}{2}\right)^2\right]$ <br />
-$\dot{m}=A^* P_o \sqrt{\frac{k}{R T_0}}\left(\frac{k+1}{2}\right)^{\frac{k+1}{2(1-k)}}$ <br />
-$$ \left[\lbrack \matrix{\dot{N}_p \cr \dot{N}_a \cr \dot{d}_c \cr \dot{L}_g} \right\rbrack]=\left[\lbrack \matrix{n_p \dot{V}-\frac{N_A}{M_p}\left(\frac{N_p}{N_p+N_a}\right) \dot{m} \cr -\frac{N_A}{M_p}\left(\frac{N_p}{N_p+N_a}\right) \dot{m} \cr 2 r \cr (\text { e_(inhib) }-2) r}\right\rbrack] $$ <br />
-
 $$
 \begin{aligned}
 & k=\frac{N_p k_p+N_a k_a}{N_p+N_a} \\
 & V=L_g \pi\left(\frac{d_c}{2}\right)^2+\left(L-L_g\right) \pi\left(\frac{d_c}{2}\right)^2 \\
 & P_0=\frac{N}{V} k_b T_0 \\
 & r=a\left(P_0\right)^n \\
-& \dot{V}=(2-e_(inhib))(r \pi)\left[\left(\frac{d_c}{2}\right)^2-\left(\frac{d_c}{2}+r\right)^2\right]+L_g \pi\left[\left(\frac{d_c}{2}+r\right)^2-\left(\frac{d_c}{2}\right)^2\right] \\
+& \dot{V}=(2-e_{inhib})(r \pi)\left[\left(\frac{d_c}{2}\right)^2-\left(\frac{d_c}{2}+r\right)^2\right]+L_g \pi\left[\left(\frac{d_c}{2}+r\right)^2-\left(\frac{d_c}{2}\right)^2\right] \\
 & \dot{m}=A^* P_o \sqrt{\frac{k}{R T_0}}\left(\frac{k+1}{2}\right)^{\frac{k+1}{2(1-k)}} \\
 & \underline{\dot{x}}=\left[\begin{array}{c}
 \dot{N}_p \\
@@ -29,34 +21,11 @@ $$
 n_p \dot{V}-\frac{N_A}{M_p}\left(\frac{N_p}{N_p+N_a}\right) \dot{m} \\
 -\frac{N_A}{M_p}\left(\frac{N_p}{N_p+N_a}\right) \dot{m} \\
 2 r \\
-(e_(inhib)-2) r
+(e_{inhib}-2) r
 \end{array}\right] \\
 &
 \end{aligned}
 $$
-
-\begin{equation}
-\begin{aligned}
-& k=\frac{N_p k_p+N_a k_a}{N_p+N_a} \\
-& V=L_g \pi\left(\frac{d_c}{2}\right)^2+\left(L-L_g\right) \pi\left(\frac{d_c}{2}\right)^2 \\
-& P_0=\frac{N}{V} k_b T_0 \\
-& r=a\left(P_0\right)^n \\
-& \dot{V}=(2-e_(inhib))(r \pi)\left[\left(\frac{d_c}{2}\right)^2-\left(\frac{d_c}{2}+r\right)^2\right]+L_g \pi\left[\left(\frac{d_c}{2}+r\right)^2-\left(\frac{d_c}{2}\right)^2\right] \\
-& \dot{m}=A^* P_o \sqrt{\frac{k}{R T_0}}\left(\frac{k+1}{2}\right)^{\frac{k+1}{2(1-k)}} \\
-& \underline{\dot{x}}=\left[\begin{array}{c}
-\dot{N}_p \\
-\dot{N}_a \\
-\dot{d}_c \\
-\dot{L}_g
-\end{array}\right]=\left[\begin{array}{c}
-n_p \dot{V}-\frac{N_A}{M_p}\left(\frac{N_p}{N_p+N_a}\right) \dot{m} \\
--\frac{N_A}{M_p}\left(\frac{N_p}{N_p+N_a}\right) \dot{m} \\
-2 r \\
-(e_(inhib)-2) r
-\end{array}\right] \\
-&
-\end{aligned}
-\end{equation}
 
 ### Assumptions <br />
  - The gasses in the chamber perfectly mix instantaneously <br />
@@ -75,7 +44,9 @@ n_p \dot{V}-\frac{N_A}{M_p}\left(\frac{N_p}{N_p+N_a}\right) \dot{m} \\
 
 Calculates the expansion ratio based on the average chamber and setting the exit preesure to atmospheric pressure.
 
-$\frac{A^*}{A_e}=\left(\frac{\gamma+1}{2}\right)^{\frac{1}{\gamma-1}}\left(\frac{P_a}{P_0}\right)^{\frac{1}{\gamma}} \sqrt{\left(\frac{\gamma+1}{\gamma-1}\right)\left(1-\left(\frac{P_a}{P_0}\right)^{\frac{\gamma-1}{\gamma}}\right)}$
+$$
+\frac{A^*}{A_e}=\left(\frac{k+1}{2}\right)^{\frac{1}{k-1}}\left(\frac{P_a}{P_0}\right)^{\frac{1}{k}} \sqrt{\left(\frac{k+1}{k-1}\right)\left(1-\left(\frac{P_a}{P_0}\right)^{\frac{k-1}{k}}\right)}
+$$
 
 ### Assumptions <br />
  - Flow is isentropic <br />
@@ -87,7 +58,9 @@ $\frac{A^*}{A_e}=\left(\frac{\gamma+1}{2}\right)^{\frac{1}{\gamma-1}}\left(\frac
 
 Numerically solves the expansion ratio formula for exit pressure across chamber pressure during the burn.
 
-$P_e=\left(\frac{A^*}{A_e}\right)^\gamma\left(\frac{\gamma+1}{2}\right)^{\frac{\gamma}{1-\gamma}}\left(\frac{\gamma-1}{\gamma+1}\right)^{\frac{\gamma}{2}} P_0\left(1-\left(\frac{P_e}{P_0}\right)^{\frac{\gamma-1}{\gamma}}\right)^{-\frac{\gamma}{2}}$
+$$
+P_e=\left(\frac{A^*}{A_e}\right)^k\left(\frac{k+1}{2}\right)^{\frac{k}{1-k}}\left(\frac{k-1}{k+1}\right)^{\frac{k}{2}} P_0\left(1-\left(\frac{P_e}{P_0}\right)^{\frac{k-1}{k}}\right)^{-\frac{k}{2}}
+$$
 
 ### Assumptions <br />
  - Flow is isentropic <br />
@@ -99,7 +72,9 @@ $P_e=\left(\frac{A^*}{A_e}\right)^\gamma\left(\frac{\gamma+1}{2}\right)^{\frac{\
 
 Calculates the thrust using the rocket thrust equation for chamber pressure and exit pressure during the burn.
 
-$F=\dot{m} v_e+\left(P_e-P_a\right) A_e$
+$$
+F=\dot{m} v_e+\left(P_e-P_a\right) A_e
+$$
 
 ### Assumptions <br />
  - Flow is isentropic <br />
@@ -111,7 +86,9 @@ $F=\dot{m} v_e+\left(P_e-P_a\right) A_e$
 
 Multiplies the average thrust by the burn time to get total impulse.
 
-$I_t=F_{\text {avg }} t_{\text {burn }}$
+$$
+I_t=F_{\text {avg }} t_{\text {burn }}
+$$
 
 ### Assumptions <br />
  - None <br />
@@ -121,7 +98,9 @@ $I_t=F_{\text {avg }} t_{\text {burn }}$
 
 Divides total impulse by the mass of the propellent times gravity to get specific impulse.
 
-$I_{s p}=\frac{I_t}{m g}$
+$$
+I_{s p}=\frac{I_t}{w}=\frac{I_t}{m g}
+$$
 
 ### Assumptions <br />
  - None <br />

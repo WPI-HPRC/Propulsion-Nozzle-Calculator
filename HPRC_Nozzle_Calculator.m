@@ -2,7 +2,7 @@ clear; close all; clc;
 
 %% Inputs
 
-%   Casing
+%   Chamber
 L = 7; % Length of Chamber (in)
 d_case = 1.8; % Diameter of Chamber (in)
 
@@ -18,9 +18,9 @@ theta_d = 17.5; % Nozzle Diverge Angles (degrees)
 expansion_ratio = 5; % Manual expansion ratio if the auto expansion ratio setting is off
 
 %   Propellant
-M_p = 0.02367; % Molar Mass of Propellent (kgmol^-1)
+M_p = 0.02367; % Molar Mass of Propellant (kgmol^-1)
 T_0 = 2773; % Combustion Temperature (K)
-rho_p = 1668.474187; % Density of Solid Propellent (kg/m^3)
+rho_p = 1668.474187; % Density of Solid Propellant (kg/m^3)
 PRangeMax = [1000]; % Max pressure of pressure ranges (psi)
 a = [0.024986]; % Burn Coeffient of pressure ranges (ins^-1psi^1n)
 n = [0.3273]; % Burn Exponent of pressure ranges

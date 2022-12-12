@@ -76,7 +76,9 @@ $$
 \begin{aligned}
 & \dot{m}=A^* P_o \sqrt{\frac{k}{R T_0}}\left(\frac{k+1}{2}\right)^{\frac{k+1}{2(1-k)}} \\
 & v_e=\sqrt{\frac{2 k}{k-1} R T_0\left(1-\left(\frac{P_0}{P_a}\right)^{\frac{1-k}{k}}\right)} \\
-& F=\dot{m} v_e+\left(P_e-P_a\right) A_e
+& F=\dot{m} v_e+\left(P_e-P_a\right) A_e \\
+&
+\end{aligned}
 $$
 
 ### Assumptions <br />

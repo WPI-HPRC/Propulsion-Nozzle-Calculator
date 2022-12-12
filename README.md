@@ -1,17 +1,59 @@
 # **Propulsion Nozzle Calculator**
 
-# Chamber Pressure
-
-Uses RK4 to numerically solve a system of differential equations for the number of particles in the chamber, core diameter, and length of grain. Solves for chamber pressure from number of particles in the chamber using the ideal gas law.
+# Symbols
 
 $$
 \begin{aligned}
-& k=\frac{N_p k_p+N_a k_a}{N_p+N_a} \\
+& L: Length of Chamber \\
+& d_c: Diamter of Core \\
+& L_g: Length of Grain \\
+& e_{inhib}: Number of Inhibited Ends \\
+& A^*: Area of Throat \\
+& M_p: Molar Mass of Propellant \\
+& T_0: Combustion Temperature \\
+& \rho_p: Density of Solid Propellant \\
+& a: Burn Rate Coeffeient \\
+& n: Burn Rate Exponent \\
+& \gamma_p: Ratio of Specific Heats of Propellant \\
+& \gamma_a: Ratio of Specific Heats of Air \\
+& \gamma: Ratio of Specific Heats of Exhaust \\
+& N_p: Number of Particles of Propellant \\
+& N_a: Number of Particles of Air \\
+& N: Total Number of Particles \\
+& N_A: Avagadros Number \\
+& V: Volume of Exhaust Area \\
+& k_b: Boltzmann Constant \\
+& e_{inhib}: Number of Inhibited Ends \\
+& R: Specific Gas Constant \\
+& n_p: Number Density of Propellant \\
+& r: Burn Rate \\
+& P_a: Atmospheric Pressure \\
+& P_e: Exit Pressure \\
+& v_e: Exit Velocity \\
+& F: Thrust Force \\
+& A_e: Exit Area \\
+& I_t: Total Impulse \\
+& F_{avg}: Average Thrust \\
+& t_{burn}: Burn Time \\
+& I_{sp}: Specific Impulse \\
+& m: Mass of Propellant \\
+& g: Stadard Gravity \\
+& 
+\end{aligned}
+$$
+
+# Chamber Pressure
+
+Uses RK4 to numerically solve a system of differential equations for the number of particles in the chamber, core diameter, and length of grain until the core diamter is larger than the chamber diamter. Solves for chamber pressure from number of particles in the chamber using the ideal gas law.
+
+$$
+\begin{aligned}
+& \gamma=\frac{N_p \gamma_p+N_a \gamma_a}{N_p+N_a} \\
 & V=L_g \pi\left(\frac{d_c}{2}\right)^2+\left(L-L_g\right) \pi\left(\frac{d_c}{2}\right)^2 \\
-& P_0=\frac{N}{V} k_b T_0 \\
+& P_0=\frac{N}{V} \gamma_b T_0 \\
 & r=a\left(P_0\right)^n \\
 & \dot{V}=(2-e_{inhib})(r \pi)\left[\left(\frac{d_c}{2}\right)^2-\left(\frac{d_c}{2}+r\right)^2\right]+L_g \pi\left[\left(\frac{d_c}{2}+r\right)^2-\left(\frac{d_c}{2}\right)^2\right] \\
-& \dot{m}=A^* P_o \sqrt{\frac{k}{R T_0}}\left(\frac{k+1}{2}\right)^{\frac{k+1}{2(1-k)}} \\
+& \dot{m}=A^* P_o \sqrt{\frac{\gamma}{R T_0}}\left(\frac{\gamma+1}{2}\right)^{\frac{\gamma+1}{2(1-\gamma)}} \\
 & \underline{\dot{x}}=\left[\begin{array}{c}
 \dot{N}_p \\
 \dot{N}_a \\
@@ -42,10 +84,10 @@ $$
 
 # Expansion Ratio
 
-Calculates the expansion ratio based on the average chamber and setting the exit preesure to atmospheric pressure.
+Calculates the expansion ratio based on the average chamber and setting the exit preesure to atmospheric pressure. The equation is for the inverse expansion ratio, so we invert it before its used, and we also calulate the exit area and exit diameter from the expansion ratio.
 
 $$
-\frac{A^*}{A_e}=\left(\frac{k+1}{2}\right)^{\frac{1}{k-1}}\left(\frac{P_a}{P_0}\right)^{\frac{1}{k}} \sqrt{\left(\frac{k+1}{k-1}\right)\left(1-\left(\frac{P_a}{P_0}\right)^{\frac{k-1}{k}}\right)}
+\frac{A^*}{A_e}=\left(\frac{\gamma+1}{2}\right)^{\frac{1}{\gamma-1}}\left(\frac{P_a}{P_0}\right)^{\frac{1}{\gamma}} \sqrt{\left(\frac{\gamma+1}{\gamma-1}\right)\left(1-\left(\frac{P_a}{P_0}\right)^{\frac{\gamma-1}{\gamma}}\right)}
 $$
 
 ### Assumptions <br />
@@ -56,10 +98,10 @@ $$
 
 # Exit Pressure
 
-Numerically solves the expansion ratio formula for exit pressure across chamber pressure during the burn.
+Numerically solves the expansion ratio formula for exit pressure across chamber pressure during the burn. The series converges, so exit pressure is calculated by repeatedly plugging it in until it is close enough to the true exit pressure.
 
 $$
-P_e=\left(\frac{A^*}{A_e}\right)^k\left(\frac{k+1}{2}\right)^{\frac{k}{1-k}}\left(\frac{k-1}{k+1}\right)^{\frac{k}{2}} P_0\left(1-\left(\frac{P_e}{P_0}\right)^{\frac{k-1}{k}}\right)^{-\frac{k}{2}}
+P_e=\left(\frac{A^*}{A_e}\right)^\gamma\left(\frac{\gamma+1}{2}\right)^{\frac{\gamma}{1-\gamma}}\left(\frac{\gamma-1}{\gamma+1}\right)^{\frac{\gamma}{2}} P_0\left(1-\left(\frac{P_e}{P_0}\right)^{\frac{\gamma-1}{\gamma}}\right)^{-\frac{\gamma}{2}}
 $$
 
 ### Assumptions <br />
@@ -70,12 +112,12 @@ $$
 
 # Thrust
 
-Calculates the thrust using the rocket thrust equation for chamber pressure and exit pressure during the burn.
+Calculates the thrust using the rocket thrust equation for chamber pressure and exit pressure during the burn. The mass flow rate is shown here, but it is saved during the chamber pressure calculation.
 
 $$
 \begin{aligned}
-& \dot{m}=A^* P_o \sqrt{\frac{k}{R T_0}}\left(\frac{k+1}{2}\right)^{\frac{k+1}{2(1-k)}} \\
-& v_e=\sqrt{\frac{2 k}{k-1} R T_0\left(1-\left(\frac{P_0}{P_a}\right)^{\frac{1-k}{k}}\right)} \\
+& \dot{m}=A^* P_o \sqrt{\frac{\gamma}{R T_0}}\left(\frac{\gamma+1}{2}\right)^{\frac{\gamma+1}{2(1-\gamma)}} \\
+& v_e=\sqrt{\frac{2 \gamma}{\gamma-1} R T_0\left(1-\left(\frac{P_0}{P_a}\right)^{\frac{1-\gamma}{\gamma}}\right)} \\
 & F=\dot{m} v_e+\left(P_e-P_a\right) A_e \\
 &
 \end{aligned}
@@ -89,7 +131,7 @@ $$
 
 # Total Impulse
 
-Multiplies the average thrust by the burn time to get total impulse.
+Multiplies the average thrust by the burn time to get total impulse. Average thrust is calculated by numerically integrating thrust over time. Burn time is calculated by taking the final time of the chamber pressure RK4. 
 
 $$
 I_t=F_{\text {avg }} t_{\text {burn }}

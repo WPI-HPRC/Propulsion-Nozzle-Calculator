@@ -115,3 +115,22 @@ $$
  - The entire thickness of the throat is the same temperature <br />
  - The chamber is always at the combustion temperture <br />
 	
+	
+# Casing Temperature
+
+### Assumptions <br />
+ - Flow is isentropic <br />
+ - Ideal gas <br />
+ - The entire thickness of the phenolic liner is at the same temperature  <br />
+ - The entire thickness of the casing is at the same temperature  <br />
+ - The chamber is always at the combustion temperture <br />
+ 
+ 
+ # Pressure Transducer Temperature
+
+### Assumptions <br />
+ - Flow is isentropic <br />
+ - Ideal gas <br />
+ - Gas is flowing through the tube <br />
+ - The tube is the same temperature as the gas in it <br />
+ - Steady state <br />

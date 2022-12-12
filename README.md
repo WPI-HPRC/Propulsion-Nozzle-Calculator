@@ -4,40 +4,40 @@
 
 $$
 \begin{aligned}
-& L: Length of Chamber \\
-& d_c: Diamter of Core \\
-& L_g: Length of Grain \\
-& e_{inhib}: Number of Inhibited Ends \\
-& A^*: Area of Throat \\
-& M_p: Molar Mass of Propellant \\
-& T_0: Combustion Temperature \\
-& \rho_p: Density of Solid Propellant \\
-& a: Burn Rate Coeffeient \\
-& n: Burn Rate Exponent \\
-& \gamma_p: Ratio of Specific Heats of Propellant \\
-& \gamma_a: Ratio of Specific Heats of Air \\
-& \gamma: Ratio of Specific Heats of Exhaust \\
-& N_p: Number of Particles of Propellant \\
-& N_a: Number of Particles of Air \\
-& N: Total Number of Particles \\
-& N_A: Avagadros Number \\
-& V: Volume of Exhaust Area \\
-& k_b: Boltzmann Constant \\
-& e_{inhib}: Number of Inhibited Ends \\
-& R: Specific Gas Constant \\
-& n_p: Number Density of Propellant \\
-& r: Burn Rate \\
-& P_a: Atmospheric Pressure \\
-& P_e: Exit Pressure \\
-& v_e: Exit Velocity \\
-& F: Thrust Force \\
-& A_e: Exit Area \\
-& I_t: Total Impulse \\
-& F_{avg}: Average Thrust \\
-& t_{burn}: Burn Time \\
-& I_{sp}: Specific Impulse \\
-& m: Mass of Propellant \\
-& g: Stadard Gravity \\
+& L: \text{Length of Chamber} \\
+& d_c: \text{Diamter of Core} \\
+& L_g: \text{Length of Grain} \\
+& e_{inhib}: \text{Number of Inhibited Ends} \\
+& A^*: \text{Area of Throat} \\
+& M_p: \text{Molar Mass of Propellant} \\
+& T_0: \text{Combustion Temperature} \\
+& \rho_p: \text{Density of Solid Propellant} \\
+& a: \text{Burn Rate Coeffeient} \\
+& n: \text{Burn Rate Exponent} \\
+& \gamma_p: \text{Ratio of Specific Heats of Propellant} \\
+& \gamma_a: \text{Ratio of Specific Heats of Air} \\
+& \gamma: \text{Ratio of Specific Heats of Exhaust} \\
+& N_p: \text{Number of Particles of Propellant} \\
+& N_a: \text{Number of Particles of Air} \\
+& N: \text{Total Number of Particles} \\
+& N_A: \text{Avagadros Number} \\
+& V: \text{Volume of Exhaust Area} \\
+& k_b: \text{Boltzmann Constant} \\
+& e_{inhib}: \text{Number of Inhibited Ends} \\
+& R: \text{Specific Gas Constant} \\
+& n_p: \text{Number Density of Propellant} \\
+& r: \text{Burn Rate} \\
+& P_a: \text{Atmospheric Pressure} \\
+& P_e: \text{Exit Pressure} \\
+& v_e: \text{Exit Velocity} \\
+& F: \text{Thrust Force} \\
+& A_e: \text{Exit Area} \\
+& I_t: \text{Total Impulse} \\
+& F_{avg}: \text{Average Thrust} \\
+& t_{burn}: \text{Burn Time} \\
+& I_{sp}: \text{Specific Impulse} \\
+& m: \text{Mass of Propellant} \\
+& g: \text{Stadard Gravity} \\
 & 
 \end{aligned}
 $$

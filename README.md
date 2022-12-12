@@ -35,7 +35,7 @@ $$
 & t_{burn}: \text{Burn Time} \\
 & I_{sp}: \text{Specific Impulse} \\
 & m: \text{Mass of Propellant} \\
-& g: \text{Stadard Gravity} \\
+& g: \text{Standard Gravity} \\
 & 
 \end{aligned}
 $$

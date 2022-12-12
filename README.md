@@ -4,7 +4,13 @@
 
 Uses RK4 to numerically solve a system of differential equations for the number of particles in the chamber, core diameter, and length of grain. Solves for chamber pressure from number of particles in the chamber using the ideal gas law.
 
-
+$k=\frac{N_p k_p+N_a k_a}{N_p+N_a}$
+$V=L_g \pi\left(\frac{d_c}{2}\right)^2+\left(L-L_g\right) \pi\left(\frac{d_c}{2}\right)^2$
+$P_0=\frac{N}{V} k_b T_0$
+$r=a\left(P_0\right)^n$
+$\dot{V}=(2-e_inhib)(r \pi)\left[\left(\frac{d_c}{2}\right)^2-\left(\frac{d_c}{2}+r\right)^2\right]+L_g \pi\left[\left(\frac{d_c}{2}+r\right)^2-\left(\frac{d_c}{2}\right)^2\right]$
+$\dot{m}=A^* P_o \sqrt{\frac{k}{R T_0}}\left(\frac{k+1}{2}\right)^{\frac{k+1}{2(1-k)}}$
+$\underline{\dot{x}}=\left[\begin{array}{c}\dot{N}_p \\ \dot{N}_a \\ \dot{d}_c \\ \dot{L}_g\end{array}\right]=\left[\begin{array}{c}n_p \dot{V}-\frac{N_A}{M_p}\left(\frac{N_p}{N_p+N_a}\right) \dot{m} \\ -\frac{N_A}{M_p}\left(\frac{N_p}{N_p+N_a}\right) \dot{m} \\ 2 r \\ (\text { e_inhib }-2) r\end{array}\right]$
 
 ### Assumptions <br />
  - The gasses in the chamber perfectly mix instantaneously <br />

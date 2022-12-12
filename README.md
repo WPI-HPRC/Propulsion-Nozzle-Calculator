@@ -11,7 +11,6 @@ $$
 & A^*: \text{Area of Throat} \\
 & M_p: \text{Molar Mass of Propellant} \\
 & T_0: \text{Combustion Temperature} \\
-& \rho_p: \text{Density of Solid Propellant} \\
 & a: \text{Burn Rate Coeffeient} \\
 & n: \text{Burn Rate Exponent} \\
 & \gamma_p: \text{Ratio of Specific Heats of Propellant} \\
@@ -23,7 +22,6 @@ $$
 & N_A: \text{Avagadros Number} \\
 & V: \text{Volume of Exhaust Area} \\
 & k_b: \text{Boltzmann Constant} \\
-& e_{inhib}: \text{Number of Inhibited Ends} \\
 & R: \text{Specific Gas Constant} \\
 & n_p: \text{Number Density of Propellant} \\
 & r: \text{Burn Rate} \\

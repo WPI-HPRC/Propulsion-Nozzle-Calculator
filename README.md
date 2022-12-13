@@ -89,7 +89,9 @@ $$
 Calculates the expansion ratio based on the average chamber and setting the exit preesure to atmospheric pressure. The equation is for the inverse expansion ratio, so we invert it before its used, and we also calulate the exit area and exit diameter from the expansion ratio.
 
 $$
-\frac{A^*}{A_e}=\left(\frac{\gamma+1}{2}\right)^{\frac{1}{\gamma-1}}\left(\frac{P_a}{P_0}\right)^{\frac{1}{\gamma}} \sqrt{\left(\frac{\gamma+1}{\gamma-1}\right)\left(1-\left(\frac{P_a}{P_0}\right)^{\frac{\gamma-1}{\gamma}}\right)}
+\begin{flalign}
+& \frac{A^*}{A_e}=\left(\frac{\gamma+1}{2}\right)^{\frac{1}{\gamma-1}}\left(\frac{P_a}{P_0}\right)^{\frac{1}{\gamma}} \sqrt{\left(\frac{\gamma+1}{\gamma-1}\right)\left(1-\left(\frac{P_a}{P_0}\right)^{\frac{\gamma-1}{\gamma}}\right)} &\\
+&
 $$
 
 ### Assumptions <br />
@@ -103,7 +105,9 @@ $$
 Numerically solves the expansion ratio formula for exit pressure across chamber pressure during the burn. The series converges, so exit pressure is calculated by repeatedly plugging it in until it is close enough to the true exit pressure.
 
 $$
-P_e=\left(\frac{A^*}{A_e}\right)^\gamma\left(\frac{\gamma+1}{2}\right)^{\frac{\gamma}{1-\gamma}}\left(\frac{\gamma-1}{\gamma+1}\right)^{\frac{\gamma}{2}} P_0\left(1-\left(\frac{P_e}{P_0}\right)^{\frac{\gamma-1}{\gamma}}\right)^{-\frac{\gamma}{2}}
+\begin{flalign}
+& P_e=\left(\frac{A^*}{A_e}\right)^\gamma\left(\frac{\gamma+1}{2}\right)^{\frac{\gamma}{1-\gamma}}\left(\frac{\gamma-1}{\gamma+1}\right)^{\frac{\gamma}{2}} P_0\left(1-\left(\frac{P_e}{P_0}\right)^{\frac{\gamma-1}{\gamma}}\right)^{-\frac{\gamma}{2}} &\\
+&
 $$
 
 ### Assumptions <br />
@@ -136,7 +140,9 @@ $$
 Multiplies the average thrust by the burn time to get total impulse. Average thrust is calculated by numerically integrating thrust over time. Burn time is calculated by taking the final time of the chamber pressure RK4. 
 
 $$
-I_t=F_{\text {avg }} t_{\text {burn }}
+\begin{flalign}
+& I_t=F_{\text {avg }} t_{\text {burn }} &\\
+&
 $$
 
 ### Assumptions <br />
@@ -148,7 +154,9 @@ $$
 Divides total impulse by the mass of the propellent times gravity to get specific impulse.
 
 $$
-I_{s p}=\frac{I_t}{m g}
+\begin{flalign}
+& I_{s p}=\frac{I_t}{m g} &\\
+&
 $$
 
 ### Assumptions <br />

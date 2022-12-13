@@ -51,10 +51,10 @@ Uses RK4 to numerically solve a system of differential equations for the number 
 $$
 \begin{aligned}
 & \gamma=\frac{N_p \gamma_p+N_a \gamma_a}{N_p+N_a} \\
-& V=\pi L_g \left(\frac{d_c}{2}\right)^2+\pi\left(L-L_g\right)\left(\frac{d_{case}}{2}\right)^2 \\
+& V=\pi L_g \left(\frac{d_c}{2}\right)^2+\pi\left(L-L_g\right)\left(\frac{d_{chamber}}{2}\right)^2 \\
 & P_0=\frac{N}{V} \gamma_b T_0 \\
 & r=a\left(P_0\right)^n \\
-& \dot{V}=(2-e_{inhib})(\pi r)\left[\left(\frac{d_{case}}{2}\right)^2-\left(\frac{d_c}{2}+r\right)^2\right]+\pi L_g \left[\left(\frac{d_c}{2}+r\right)^2-\left(\frac{d_c}{2}\right)^2\right] \\
+& \dot{V}=(2-e_{inhib})(\pi r)\left[\left(\frac{d_{chamber}}{2}\right)^2-\left(\frac{d_c}{2}+r\right)^2\right]+\pi L_g \left[\left(\frac{d_c}{2}+r\right)^2-\left(\frac{d_c}{2}\right)^2\right] \\
 & \dot{m}=A^* P_o \sqrt{\frac{\gamma}{R T_0}}\left(\frac{\gamma+1}{2}\right)^{\frac{\gamma+1}{2(1-\gamma)}} \\
 & \underline{\dot{x}}=\left[\begin{array}{c}
 \dot{N}_p \\

@@ -6,7 +6,7 @@ After the main script has been ran, the scripts for casing temperature, throat t
 # Symbols
 
 $$
-\begin{flalign}
+\begin{align*}
 & L: \text{Length of Chamber} \\
 & d_{chamber}: \text{Diamter of Chamber} \\
 & d_c: \text{Diamter of Core} \\
@@ -41,7 +41,7 @@ $$
 & m: \text{Mass of Propellant} \\
 & g: \text{Standard Gravity} \\
 & 
-\end{flalign}
+\end{align*}
 $$
 
 # Chamber Pressure
@@ -49,7 +49,7 @@ $$
 Uses RK4 to numerically solve a system of differential equations for the number of particles in the chamber, core diameter, and length of grain until the core diamter is larger than the chamber diamter. Solves for chamber pressure from number of particles in the chamber using the ideal gas law.
 
 $$
-\begin{flalign}
+\begin{align*}
 & \gamma=\frac{N_p \gamma_p+N_a \gamma_a}{N_p+N_a} \\
 & V=\pi L_g \left(\frac{d_c}{2}\right)^2+\pi\left(L-L_g\right)\left(\frac{d_{chamber}}{2}\right)^2 \\
 & P_0=\frac{N}{V} \gamma_b T_0 \\
@@ -68,7 +68,7 @@ n_p \dot{V}-\frac{N_A}{M_p}\left(\frac{N_p}{N_p+N_a}\right) \dot{m} \\
 (e_{inhib}-2) r
 \end{array}\right] \\
 &
-\end{flalign}
+\end{align*}
 $$
 
 ### Assumptions <br />
@@ -117,12 +117,12 @@ $$
 Calculates the thrust using the rocket thrust equation for chamber pressure and exit pressure during the burn. The mass flow rate is shown here, but it is saved during the chamber pressure calculation.
 
 $$
-\begin{flalign}
+\begin{align*}
 & \dot{m}=A^* P_o \sqrt{\frac{\gamma}{R T_0}}\left(\frac{\gamma+1}{2}\right)^{\frac{\gamma+1}{2(1-\gamma)}} \\
 & v_e=\sqrt{\frac{2 \gamma}{\gamma-1} R T_0\left(1-\left(\frac{P_0}{P_a}\right)^{\frac{1-\gamma}{\gamma}}\right)} \\
 & F=\dot{m} v_e+\left(P_e-P_a\right) A_e \\
 &
-\end{flalign}
+\end{align*}
 $$
 
 ### Assumptions <br />

@@ -1,6 +1,7 @@
 # **Propulsion Nozzle Calculator**
 
-To use the nozzle calculator start by putting in the the input parameters, the exit pressure can be calculated for the optimal value for unchanging atmospheric pressure or can be set to manually be entered, then the chamber preesure and thrust are calculated over the course of the burn as well as the total and specific impulse. After the main script has been ran, the scripts for casing temperature, throat temperature, or pressure transducer temperature can be ran. Throat temperature should only be ran if a non-ablative material is used(eg. not graphite). The pressure transducer temperature is only important during static fire tests where the pressure is recoded using a tube into the forward closure and should be a large overestimate compared to the real temperature.
+To use the nozzle calculator start by putting in the the input parameters, the exit pressure can be calculated for the optimal value for unchanging atmospheric pressure or can be set to manually be entered, then the chamber preesure and thrust are calculated over the course of the burn as well as the total and specific impulse. <br />
+After the main script has been ran, the scripts for casing temperature, throat temperature, or pressure transducer temperature can be ran. Throat temperature should only be ran if a non-ablative material is used(eg. not graphite). The pressure transducer temperature is only important during static fire tests where the pressure is recoded using a tube into the forward closure and should be a large overestimate compared to the real temperature.
 
 # Symbols
 

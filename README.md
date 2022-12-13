@@ -1,5 +1,7 @@
 # **Propulsion Nozzle Calculator**
 
+To use the nozzle calculator start by putting in the the input parameters, the exit pressure can be calculated for the optimal value for unchanging atmospheric pressure or can be set to manually be entered, then the chamber preesure and thrust are calculated over the course of the burn as well as the total and specific impulse. After the main script has been ran, the scripts for casing temperature, throat temperature, or pressure transducer temperature can be ran. Throat temperature should only be ran if a non-ablative material is used(eg. not graphite). The pressure transducer temperature is only important during static fire tests where the pressure is recoded using a tube into the forward closure and should be a large overestimate compared to the real temperature.
+
 # Symbols
 
 $$
@@ -47,10 +49,10 @@ Uses RK4 to numerically solve a system of differential equations for the number 
 $$
 \begin{aligned}
 & \gamma=\frac{N_p \gamma_p+N_a \gamma_a}{N_p+N_a} \\
-& V=L_g \pi\left(\frac{d_c}{2}\right)^2+\left(L-L_g\right) \pi\left(\frac{d_c}{2}\right)^2 \\
+& V=L_g \pi\left(\frac{d_c}{2}\right)^2+\left\pi (L-L_g\right) \left(\frac{d_c}{2}\right)^2 \\
 & P_0=\frac{N}{V} \gamma_b T_0 \\
 & r=a\left(P_0\right)^n \\
-& \dot{V}=(2-e_{inhib})(r \pi)\left[\left(\frac{d_c}{2}\right)^2-\left(\frac{d_c}{2}+r\right)^2\right]+L_g \pi\left[\left(\frac{d_c}{2}+r\right)^2-\left(\frac{d_c}{2}\right)^2\right] \\
+& \dot{V}=(2-e_{inhib})(\pi r)\left[\left(\frac{d_c}{2}\right)^2-\left(\frac{d_c}{2}+r\right)^2\right]+L_g \pi\left[\left(\frac{d_c}{2}+r\right)^2-\left(\frac{d_c}{2}\right)^2\right] \\
 & \dot{m}=A^* P_o \sqrt{\frac{\gamma}{R T_0}}\left(\frac{\gamma+1}{2}\right)^{\frac{\gamma+1}{2(1-\gamma)}} \\
 & \underline{\dot{x}}=\left[\begin{array}{c}
 \dot{N}_p \\
@@ -166,6 +168,8 @@ $$
 ### Assumptions <br />
  - Flow is isentropic <br />
  - Ideal gas <br />
+ - Only one inner liner is used <br />
+ - No exhuast gas is able to get around the inner liner  <br />
  - The entire thickness of the phenolic liner is at the same temperature  <br />
  - The entire thickness of the casing is at the same temperature  <br />
  - The chamber is always at the combustion temperture <br />

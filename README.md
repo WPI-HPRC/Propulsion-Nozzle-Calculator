@@ -50,7 +50,7 @@ Uses RK4 to numerically solve a system of differential equations for the number 
 
 $$
 \begin{flalign}
-&
+& &\\
 & \gamma=\frac{N_p \gamma_p+N_a \gamma_a}{N_p+N_a} &\\
 & V=\pi L_g \left(\frac{d_c}{2}\right)^2+\pi\left(L-L_g\right)\left(\frac{d_{chamber}}{2}\right)^2 &\\
 & P_0=\frac{N}{V} \gamma_b T_0 &\\
@@ -91,7 +91,7 @@ Calculates the expansion ratio based on the average chamber and setting the exit
 
 $$
 \begin{flalign}
-&
+& &\\
 & \frac{A^*}{A_e}=\left(\frac{\gamma+1}{2}\right)^{\frac{1}{\gamma-1}}\left(\frac{P_a}{P_0}\right)^{\frac{1}{\gamma}} \sqrt{\left(\frac{\gamma+1}{\gamma-1}\right)\left(1-\left(\frac{P_a}{P_0}\right)^{\frac{\gamma-1}{\gamma}}\right)} &\\
 &
 \end{flalign}
@@ -109,7 +109,7 @@ Numerically solves the expansion ratio formula for exit pressure across chamber 
 
 $$
 \begin{flalign}
-&
+& &\\
 & P_e=\left(\frac{A^*}{A_e}\right)^\gamma\left(\frac{\gamma+1}{2}\right)^{\frac{\gamma}{1-\gamma}}\left(\frac{\gamma-1}{\gamma+1}\right)^{\frac{\gamma}{2}} P_0\left(1-\left(\frac{P_e}{P_0}\right)^{\frac{\gamma-1}{\gamma}}\right)^{-\frac{\gamma}{2}} &\\
 &
 \end{flalign}
@@ -127,7 +127,7 @@ Calculates the thrust using the rocket thrust equation for chamber pressure and 
 
 $$
 \begin{flalign}
-&
+& &\\
 & \dot{m}=A^* P_o \sqrt{\frac{\gamma}{R T_0}}\left(\frac{\gamma+1}{2}\right)^{\frac{\gamma+1}{2(1-\gamma)}} &\\
 & v_e=\sqrt{\frac{2 \gamma}{\gamma-1} R T_0\left(1-\left(\frac{P_0}{P_a}\right)^{\frac{1-\gamma}{\gamma}}\right)} &\\
 & F=\dot{m} v_e+\left(P_e-P_a\right) A_e &\\
@@ -147,7 +147,7 @@ Multiplies the average thrust by the burn time to get total impulse. Average thr
 
 $$
 \begin{flalign}
-&
+& &\\
 & I_t=F_{\text {avg }} t_{\text {burn }} &\\
 &
 \end{flalign}
@@ -163,7 +163,7 @@ Divides total impulse by the mass of the propellent times gravity to get specifi
 
 $$
 \begin{flalign}
-&
+& &\\
 & I_{s p}=\frac{I_t}{m g} &\\
 &
 \end{flalign}

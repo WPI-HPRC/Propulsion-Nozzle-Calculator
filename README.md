@@ -6,42 +6,42 @@ After the main script has been ran, the scripts for casing temperature, throat t
 # Symbols
 
 $$
-\begin{align*}
-& L: \text{Length of Chamber} \\
-& d_{chamber}: \text{Diamter of Chamber} \\
-& d_c: \text{Diamter of Core} \\
-& L_g: \text{Length of Grain} \\
-& e_{inhib}: \text{Number of Inhibited Ends} \\
-& A^*: \text{Area of Throat} \\
-& M_p: \text{Molar Mass of Propellant} \\
-& T_0: \text{Combustion Temperature} \\
-& a: \text{Burn Rate Coeffeient} \\
-& n: \text{Burn Rate Exponent} \\
-& \gamma_p: \text{Ratio of Specific Heats of Propellant} \\
-& \gamma_a: \text{Ratio of Specific Heats of Air} \\
-& \gamma: \text{Ratio of Specific Heats of Exhaust} \\
-& N_p: \text{Number of Particles of Propellant} \\
-& N_a: \text{Number of Particles of Air} \\
-& N: \text{Total Number of Particles} \\
-& N_A: \text{Avagadros Number} \\
-& V: \text{Volume of Exhaust Area} \\
-& k_b: \text{Boltzmann Constant} \\
-& R: \text{Specific Gas Constant} \\
-& n_p: \text{Number Density of Propellant} \\
-& r: \text{Burn Rate} \\
-& P_a: \text{Atmospheric Pressure} \\
-& P_e: \text{Exit Pressure} \\
-& v_e: \text{Exit Velocity} \\
-& F: \text{Thrust Force} \\
-& A_e: \text{Exit Area} \\
-& I_t: \text{Total Impulse} \\
-& F_{avg}: \text{Average Thrust} \\
-& t_{burn}: \text{Burn Time} \\
-& I_{sp}: \text{Specific Impulse} \\
-& m: \text{Mass of Propellant} \\
-& g: \text{Standard Gravity} \\
+\begin{flalign}
+& L: \text{Length of Chamber} &\\
+& d_{chamber}: \text{Diamter of Chamber} &\\
+& d_c: \text{Diamter of Core} &\\
+& L_g: \text{Length of Grain} &\\
+& e_{inhib}: \text{Number of Inhibited Ends} &\\
+& A^*: \text{Area of Throat} &\\
+& M_p: \text{Molar Mass of Propellant} &\\
+& T_0: \text{Combustion Temperature} &\\
+& a: \text{Burn Rate Coeffeient} &\\
+& n: \text{Burn Rate Exponent} &\\
+& \gamma_p: \text{Ratio of Specific Heats of Propellant} &\\
+& \gamma_a: \text{Ratio of Specific Heats of Air} &\\
+& \gamma: \text{Ratio of Specific Heats of Exhaust} &\\
+& N_p: \text{Number of Particles of Propellant} &\\
+& N_a: \text{Number of Particles of Air} &\\
+& N: \text{Total Number of Particles} &\\
+& N_A: \text{Avagadros Number} &\\
+& V: \text{Volume of Exhaust Area} &\\
+& k_b: \text{Boltzmann Constant} &\\
+& R: \text{Specific Gas Constant} &\\
+& n_p: \text{Number Density of Propellant} &\\
+& r: \text{Burn Rate} &\\
+& P_a: \text{Atmospheric Pressure} &\\
+& P_e: \text{Exit Pressure} &\\
+& v_e: \text{Exit Velocity} &\\
+& F: \text{Thrust Force} &\\
+& A_e: \text{Exit Area} &\\
+& I_t: \text{Total Impulse} &\\
+& F_{avg}: \text{Average Thrust} &\\
+& t_{burn}: \text{Burn Time} &\\
+& I_{sp}: \text{Specific Impulse} &\\
+& m: \text{Mass of Propellant} &\\
+& g: \text{Standard Gravity} &\\
 & 
-\end{align*}
+\end{flalign}
 $$
 
 # Chamber Pressure
@@ -49,26 +49,26 @@ $$
 Uses RK4 to numerically solve a system of differential equations for the number of particles in the chamber, core diameter, and length of grain until the core diamter is larger than the chamber diamter. Solves for chamber pressure from number of particles in the chamber using the ideal gas law.
 
 $$
-\begin{align*}
-& \gamma=\frac{N_p \gamma_p+N_a \gamma_a}{N_p+N_a} \\
-& V=\pi L_g \left(\frac{d_c}{2}\right)^2+\pi\left(L-L_g\right)\left(\frac{d_{chamber}}{2}\right)^2 \\
-& P_0=\frac{N}{V} \gamma_b T_0 \\
-& r=a\left(P_0\right)^n \\
-& \dot{V}=(2-e_{inhib})(\pi r)\left[\left(\frac{d_{chamber}}{2}\right)^2-\left(\frac{d_c}{2}+r\right)^2\right]+\pi L_g \left[\left(\frac{d_c}{2}+r\right)^2-\left(\frac{d_c}{2}\right)^2\right] \\
-& \dot{m}=A^* P_o \sqrt{\frac{\gamma}{R T_0}}\left(\frac{\gamma+1}{2}\right)^{\frac{\gamma+1}{2(1-\gamma)}} \\
+\begin{flalign}
+& \gamma=\frac{N_p \gamma_p+N_a \gamma_a}{N_p+N_a} &\\
+& V=\pi L_g \left(\frac{d_c}{2}\right)^2+\pi\left(L-L_g\right)\left(\frac{d_{chamber}}{2}\right)^2 &\\
+& P_0=\frac{N}{V} \gamma_b T_0 &\\
+& r=a\left(P_0\right)^n &\\
+& \dot{V}=(2-e_{inhib})(\pi r)\left[\left(\frac{d_{chamber}}{2}\right)^2-\left(\frac{d_c}{2}+r\right)^2\right]+\pi L_g \left[\left(\frac{d_c}{2}+r\right)^2-\left(\frac{d_c}{2}\right)^2\right] &\\
+& \dot{m}=A^* P_o \sqrt{\frac{\gamma}{R T_0}}\left(\frac{\gamma+1}{2}\right)^{\frac{\gamma+1}{2(1-\gamma)}} &\\
 & \underline{\dot{x}}=\left[\begin{array}{c}
-\dot{N}_p \\
-\dot{N}_a \\
-\dot{d}_c \\
+\dot{N}_p &\\
+\dot{N}_a &\\
+\dot{d}_c &\\
 \dot{L}_g
 \end{array}\right]=\left[\begin{array}{c}
-n_p \dot{V}-\frac{N_A}{M_p}\left(\frac{N_p}{N_p+N_a}\right) \dot{m} \\
--\frac{N_A}{M_p}\left(\frac{N_p}{N_p+N_a}\right) \dot{m} \\
-2 r \\
+n_p \dot{V}-\frac{N_A}{M_p}\left(\frac{N_p}{N_p+N_a}\right) \dot{m} &\\
+-\frac{N_A}{M_p}\left(\frac{N_p}{N_p+N_a}\right) \dot{m} &\\
+2 r &\\
 (e_{inhib}-2) r
-\end{array}\right] \\
+\end{array}\right] &\\
 &
-\end{align*}
+\end{flalign}
 $$
 
 ### Assumptions <br />
@@ -117,12 +117,12 @@ $$
 Calculates the thrust using the rocket thrust equation for chamber pressure and exit pressure during the burn. The mass flow rate is shown here, but it is saved during the chamber pressure calculation.
 
 $$
-\begin{align*}
-& \dot{m}=A^* P_o \sqrt{\frac{\gamma}{R T_0}}\left(\frac{\gamma+1}{2}\right)^{\frac{\gamma+1}{2(1-\gamma)}} \\
-& v_e=\sqrt{\frac{2 \gamma}{\gamma-1} R T_0\left(1-\left(\frac{P_0}{P_a}\right)^{\frac{1-\gamma}{\gamma}}\right)} \\
-& F=\dot{m} v_e+\left(P_e-P_a\right) A_e \\
+\begin{flalign}
+& \dot{m}=A^* P_o \sqrt{\frac{\gamma}{R T_0}}\left(\frac{\gamma+1}{2}\right)^{\frac{\gamma+1}{2(1-\gamma)}} &\\
+& v_e=\sqrt{\frac{2 \gamma}{\gamma-1} R T_0\left(1-\left(\frac{P_0}{P_a}\right)^{\frac{1-\gamma}{\gamma}}\right)} &\\
+& F=\dot{m} v_e+\left(P_e-P_a\right) A_e &\\
 &
-\end{align*}
+\end{flalign}
 $$
 
 ### Assumptions <br />

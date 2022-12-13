@@ -92,6 +92,7 @@ $$
 \begin{flalign}
 & \frac{A^*}{A_e}=\left(\frac{\gamma+1}{2}\right)^{\frac{1}{\gamma-1}}\left(\frac{P_a}{P_0}\right)^{\frac{1}{\gamma}} \sqrt{\left(\frac{\gamma+1}{\gamma-1}\right)\left(1-\left(\frac{P_a}{P_0}\right)^{\frac{\gamma-1}{\gamma}}\right)} &\\
 &
+\end{flalign}
 $$
 
 ### Assumptions <br />
@@ -108,6 +109,7 @@ $$
 \begin{flalign}
 & P_e=\left(\frac{A^*}{A_e}\right)^\gamma\left(\frac{\gamma+1}{2}\right)^{\frac{\gamma}{1-\gamma}}\left(\frac{\gamma-1}{\gamma+1}\right)^{\frac{\gamma}{2}} P_0\left(1-\left(\frac{P_e}{P_0}\right)^{\frac{\gamma-1}{\gamma}}\right)^{-\frac{\gamma}{2}} &\\
 &
+\end{flalign}
 $$
 
 ### Assumptions <br />
@@ -143,6 +145,7 @@ $$
 \begin{flalign}
 & I_t=F_{\text {avg }} t_{\text {burn }} &\\
 &
+\end{flalign}
 $$
 
 ### Assumptions <br />
@@ -157,6 +160,7 @@ $$
 \begin{flalign}
 & I_{s p}=\frac{I_t}{m g} &\\
 &
+\end{flalign}
 $$
 
 ### Assumptions <br />

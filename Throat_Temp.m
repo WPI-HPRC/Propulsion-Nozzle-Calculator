@@ -1,25 +1,28 @@
 
 %% Run this after running the main script, it does not work on its own
 
-
+%% Inputs
 T_a = 40; % Temperature of ambient air (F)
 K_n = 15; % Thermal conductivity of nozzle material (Wm^-1K^-1)
 C_n = 500; % Specific heat of nozzle material (m^2s^-2K^-1 | Jkg^-1K^-1)
 rho_n = 7500;  % Density of nozzle material (kgm^-3)
 t_n = 0.1; % Thickness of nozzle (in);
 emissivity = 0.5; % Emissivity of nozzle material
+
+%% Constants
 h_a = 10; % Heat transfer coeffient of ambient air (Wm^-2K^-1)
 
-
+%% Conversions
 T_a = (5/9)*(T_a-32) + 273.15; % Temperature of ambient air (K)
 t_n = t_n*0.0254; % Thickness of nozzle (m);
 
-
+% RK4 Setup
 xCurr = T_a;
 
 TRec = zeros(length(t),1);
 T(1) = xCurr;
 
+% RK4 Loop
 i = 1;
 while(t(i)<burn_time)
 
@@ -34,6 +37,7 @@ while(t(i)<burn_time)
     i = i+1;
 end
 
+% Output
 figure()
 plot(t(1:i-1),TRec(1:i-1))
 title("Temperature of Nozzle over Burn")

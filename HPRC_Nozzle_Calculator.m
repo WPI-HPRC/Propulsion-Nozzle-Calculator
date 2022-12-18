@@ -72,6 +72,7 @@ effiency = 0.9; % Thrust Effiency
 
 %% Chamebr Pressure
 
+% RK4 Setup
 t = zeros(1,tMaxSteps);
 dtRec = zeros(1,length(t));
 
@@ -92,6 +93,7 @@ range = 1;
 
 i=2;
 while(true)
+    % RK4 loop
     dt = h/(1+exp(-s*(i-b)));
     dtRec(i-1) = dt;
 
@@ -103,6 +105,7 @@ while(true)
     
     t(i)=t(i-1)+dt;
 
+    % Calculates important values and saves them to their array
     N_p = xCurr(1); N_a = xCurr(2); d_c = xCurr(3); L_g = xCurr(4);
 
     V = (L-L_g)*pi*(d_case/2)^2 + L_g*pi*(d_c/2)^2;
@@ -117,24 +120,23 @@ while(true)
     [kRec(i), ~]= two_phase_flow(R,k,beta,c_s);
     mDotRec(i) = mass_flow_rate_out(A_star,P_0,R,T_0,kRec(i));
 
-    if(d_c>=d_case&&burn_time==0)
+    if(d_c>=d_case&&burn_time==0) % Records time when the burn finishes
         burn_time = t(i);
     end
 
-    if(d_c>=d_case&&P_0<P_a)
+    if(d_c>=d_case&&P_0<P_a) % Breaks loop when the burn ended and the chamber pressure is ambient 
         break;
     end
     
-    if(P_0>PRangeMax(range))
+    if(P_0>PRangeMax(range)) % Switches between pressure ranges for a and n when nessisary
         range = range+1;
     end
 
-    if(range>length(PRangeMax))
+    if(range>length(PRangeMax)) % Sends an error if the chamber pressure exceeds the known range
         fprintf("ERROR: Exceded Pressure Range\n")
     end
-    if(i==tMaxSteps)
+    if(i==tMaxSteps) % Sends an error if the max number of time steps is hit
         fprintf("ERROR: Reached Max Time Steps\n")
-        break;
     end
     i=i+1;
 end
@@ -158,7 +160,7 @@ fprintf("Burn Time: %3.2fs\n\n",burn_time);
 
 %% Expansion Ratio
 
-if(auto_expansion_ratio)
+if(auto_expansion_ratio) % Automaticaly finds optimal expansion ratio if the setting is on
     [expansion_ratio,~] = expansion_ratio_calcs(P_avg,P_a,two_phase_flow(R,k_p,beta,c_s),A_star);
 end
 
@@ -173,10 +175,8 @@ fprintf("Exit Area: %5.5fin^2\n\n",A_e/(0.0254*0.0254));
 
 P_eRec = zeros(1,length(t));
 
-for u = 1:iMax
-    
+for u = 1:iMax % Loops through chamber pressure array and finds corresponding exit pressure
     P_eRec(u) = exit_pressure_solver(A_star,A_e,kRec(u),PRec(u),first_guess,accuracy);
-
 end
 
 P_e_avg = sum(P_eRec(1:iMax).*dtRec(1:iMax))/total_time;
@@ -191,9 +191,8 @@ P_e_avg = sum(P_eRec(1:iMax).*dtRec(1:iMax))/total_time;
 
 FRec = zeros(1,length(t));
 
-for u = 1:iMax
-
-    correction = ((1/2)*(1+cos(theta_d)))*0.99*0.995*0.96*0.995;
+for u = 1:iMax % Loops through the burn to find thrust values
+    correction = ((1/2)*(1+cos(theta_d)))*0.99*0.995*0.96*0.995; % Correction factor calculated based on data in Rocket Propulsion Elements
     F = thrust(mDotRec(u),P_eRec(u),P_a,A_e,kRec(u),R,T_0,PRec(u),beta,c_s,correction);
     FRec(u) = effiency*F;
 end

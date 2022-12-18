@@ -1,17 +1,29 @@
 
 %% Run this after running the main script, it does not work on its own
 
-tube_length = 2; % Length of pressure transducer tube (m)
-tube_ID = 0.00635; % Inner diameter of pressure transducer tube (m)
+%% Inputs
+T_a = 40; % Temperature of ambient air (F)
+K_n = 15; % Thermal conductivity of nozzle material (Wm^-1K^-1)
+
+tube_length = 80; % Length of pressure transducer tube (in)
+tube_ID = 0.25; % Inner diameter of pressure transducer tube (in)
 emissivity_tube = 0.03; % Emmissivity of tube
 
+%% Conversions
+T_a = (5/9)*(T_a-32) + 273.15; % Temperature of ambient air (K)
+tube_length = tube_length*0.0254; % Length of pressure transducer tube (m)
+tube_ID = tube_ID*0.0254; % Inner diameter of pressure transducer tube (m)
+
+% RK4 Setup
 tube_dt = 0.000001;
 xRec = zeros(10000000,2);
 xCurr = [T_0*(1+((k-1)/2))^-1,0];
 xRec(1,:) = xCurr;
 
+% RK4 Loop, uses the distance along the tube to determine when it should
+% stop
 i = 2;
-while(xRec(i-1,2)<tube_length)
+while(xRec(i-1,2)<tube_length) 
 
     k1=tube_temperature_dynamics(xCurr,R,k,K_n,T_0,P_avg,M_p,k_b,N_A,d_star,tube_ID/2,emissivity_tube,sigma,T_a)*tube_dt;
     k2=tube_temperature_dynamics(xCurr+1/2*k1,R,k,K_n,T_0,P_avg,M_p,k_b,N_A,d_star,tube_ID/2,emissivity_tube,sigma,T_a)*tube_dt;
@@ -23,6 +35,7 @@ while(xRec(i-1,2)<tube_length)
     i = i+1;
 end
 
+% Output
 T_transducer_final = xRec(i-1,1);
 
 fprintf("Temperature at end of tube: %4.0fK\n\n",T_transducer_final);
@@ -44,8 +57,8 @@ function xDot = tube_temperature_dynamics(xCurr,R,k,K_n,T0,P0,M_p,k_b,N_A,d,t_n,
     h = St*rho*v*Cp;
     q = -((emissivity*sigma*T^4) + (h*(T - T_a)));
     TDot = q/(Cp*rho*t_n);
-    mDot = sqrt(k*R*T);
+    pDot = sqrt(k*R*T);
 
-    xDot = [TDot,mDot];
+    xDot = [TDot,pDot];
 end
 
